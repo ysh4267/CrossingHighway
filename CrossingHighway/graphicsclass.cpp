@@ -69,7 +69,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "data/cube.txt", L"data/seafloor.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/seafloor.dds");
 //	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/chair.txt", L"../Engine/data/chair_d.dds");
 
 	if(!result)

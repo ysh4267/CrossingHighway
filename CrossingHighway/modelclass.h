@@ -40,6 +40,13 @@ private:
 		float nx, ny, nz;
 	};
 
+	struct FaceType
+	{
+		int vIndex1, vIndex2, vIndex3;
+		int tIndex1, tIndex2, tIndex3;
+		int nIndex1, nIndex2, nIndex3;
+	};
+
 public:
 	ModelClass();
 	ModelClass(const ModelClass&);
@@ -61,12 +68,15 @@ private:
 	bool LoadTexture(ID3D11Device*, WCHAR*);
 	void ReleaseTexture();
 
+	bool LoadDataStructures(char*, int, int, int, int);
+	bool ReadFileCounts(char*, int&, int&, int&, int&);
 	bool LoadModel(char*);
 	void ReleaseModel();
 
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
+	int vertexCount, textureCount, normalCount, faceCount;
 	TextureClass* m_Texture;
 	ModelType* m_model;
 };
