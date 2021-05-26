@@ -58,7 +58,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 40.0f, 00.0f);
+	m_Camera->SetRotation(90.0f, 0.0f, 0.0f);
 	//m_Camera->SetPosition(0.0f, 0.5f, -3.0f);
 
 	// Create the model object.
@@ -286,6 +287,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	for (int i = 0; i < 9; i++)
+	{
+		carsX[i] = (2 * i) - 10;
+	}
+
 	return true;
 }
 
@@ -483,12 +489,28 @@ bool GraphicsClass::Render(float rotation)
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	//D3DXMatrixRotationY(&worldMatrix, rotation);
+	D3DXMATRIX floor1WorldMatrix, floor2WorldMatrix, car1WorldMatrix, car2WorldMatrix, truck1WorldMatrix, truck2WorldMatrix, bus1WorldMatrix, bus2WorldMatrix;
+	int infMapZ = 0;
+	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMapZ -10);
+	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMapZ+10);
+	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMapZ+4);
+	D3DXMatrixTranslation(&car2WorldMatrix, carsX[8], 0, infMapZ -4);
+	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMapZ+8);
+	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[3], 0, infMapZ -8);
+	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMapZ+14);
+	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMapZ -14);
+
+	for (int i = 0; i < 9; i++)
+	{
+		carsX[i] += 0.05;
+		if (carsX[i] > 10) carsX[i] = -10;
+	}
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_floor1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor1Model->GetIndexCount(), floor1WorldMatrix, viewMatrix, projectionMatrix,
 		m_floor1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 								   m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if(!result)
@@ -500,7 +522,7 @@ bool GraphicsClass::Render(float rotation)
 	m_floor2Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor2Model->GetIndexCount(), floor2WorldMatrix, viewMatrix, projectionMatrix,
 		m_floor2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -512,7 +534,7 @@ bool GraphicsClass::Render(float rotation)
 	m_car1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car1Model->GetIndexCount(), car1WorldMatrix, viewMatrix, projectionMatrix,
 		m_car1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -524,7 +546,7 @@ bool GraphicsClass::Render(float rotation)
 	m_car2Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car2Model->GetIndexCount(), car2WorldMatrix, viewMatrix, projectionMatrix,
 		m_car2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -536,7 +558,7 @@ bool GraphicsClass::Render(float rotation)
 	m_truck1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck1Model->GetIndexCount(), truck1WorldMatrix, viewMatrix, projectionMatrix,
 		m_truck1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -548,7 +570,7 @@ bool GraphicsClass::Render(float rotation)
 	m_truck2Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck2Model->GetIndexCount(), truck2WorldMatrix, viewMatrix, projectionMatrix,
 		m_truck2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -560,7 +582,7 @@ bool GraphicsClass::Render(float rotation)
 	m_bus1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus1Model->GetIndexCount(), bus1WorldMatrix, viewMatrix, projectionMatrix,
 		m_bus1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -572,7 +594,7 @@ bool GraphicsClass::Render(float rotation)
 	m_bus2Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus2Model->GetIndexCount(), bus2WorldMatrix, viewMatrix, projectionMatrix,
 		m_bus2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)

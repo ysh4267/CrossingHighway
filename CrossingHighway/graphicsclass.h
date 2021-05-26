@@ -46,6 +46,7 @@ public:
 	bool Render(float);
 
 private:
+	float carsX[9];
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
