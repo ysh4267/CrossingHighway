@@ -49,6 +49,14 @@ private:
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
+	ModelClass* m_floor1Model;
+	ModelClass* m_floor2Model;
+	ModelClass* m_car1Model;
+	ModelClass* m_car2Model;
+	ModelClass* m_truck1Model;
+	ModelClass* m_truck2Model;
+	ModelClass* m_bus1Model;
+	ModelClass* m_bus2Model;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 

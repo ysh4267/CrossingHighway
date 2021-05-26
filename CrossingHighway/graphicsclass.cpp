@@ -59,24 +59,152 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-//	m_Camera->SetPosition(0.0f, 0.5f, -3.0f);
+	//m_Camera->SetPosition(0.0f, 0.5f, -3.0f);
 
 	// Create the model object.
 	m_Model = new ModelClass;
-	if(!m_Model)
+	if (!m_Model)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/seafloor.dds");
-//	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/chair.txt", L"../Engine/data/chair_d.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/Car_04.png");
 
-	if(!result)
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+
+	// Create the model object.
+	m_floor1Model = new ModelClass;
+	if (!m_floor1Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_floor1Model->Initialize(m_D3D->GetDevice(), "data/plane.obj", L"data/seafloor.dds");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_floor2Model = new ModelClass;
+	if (!m_Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/plane.obj", L"data/seafloor.dds");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_car1Model = new ModelClass;
+	if (!m_car1Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_car1Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_01.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_car2Model = new ModelClass;
+	if (!m_car2Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_car2Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_02.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_truck1Model = new ModelClass;
+	if (!m_truck1Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_truck1Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/Car_04.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_truck2Model = new ModelClass;
+	if (!m_truck2Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_truck2Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/Car_05.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_bus1Model = new ModelClass;
+	if (!m_bus1Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_bus1Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_11.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_bus2Model = new ModelClass;
+	if (!m_bus2Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_bus2Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_12.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
 
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -106,7 +234,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(32.0f);
-
 
 	// Create the texture shader object.
 	m_TextureShader = new TextureShaderClass;
@@ -324,18 +451,18 @@ bool GraphicsClass::Render(float rotation)
 	m_D3D->TurnZBufferOff();
 
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 200, 200);
-	if (!result)
-	{
-		return false;
-	}
+	//result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 200, 200);
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 	// Render the bitmap with the texture shader.
-	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
-	if (!result)
-	{
-		return false;
-	}
+	//result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 
 	// Turn on the alpha blending before rendering the text.
@@ -355,16 +482,100 @@ bool GraphicsClass::Render(float rotation)
 	m_D3D->TurnZBufferOn();
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	D3DXMatrixRotationY(&worldMatrix, rotation);
+	//D3DXMatrixRotationY(&worldMatrix, rotation);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
+	m_floor1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-								   m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), 
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_floor1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 								   m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if(!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_floor2Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_floor2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_car1Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_car1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_car2Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_car2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_truck1Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_truck1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_truck2Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_truck2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_bus1Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus1Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_bus1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_bus2Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus2Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_bus2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
 	{
 		return false;
 	}
