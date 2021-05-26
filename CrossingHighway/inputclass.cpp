@@ -177,6 +177,19 @@ bool InputClass::ReadKeyboard()
 		}
 	}
 		
+	if (m_keyboardState[DIK_W]) {
+
+	}
+	else if (m_keyboardState[DIK_A]) {
+
+	}
+	else if (m_keyboardState[DIK_S]) {
+
+	}
+	else if (m_keyboardState[DIK_D]) {
+
+	}
+
 	return true;
 }
 
@@ -217,11 +230,43 @@ void InputClass::ProcessInput()
 	
 	if(m_mouseX > m_screenWidth)  { m_mouseX = m_screenWidth; }
 	if(m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
-	
+
 	return;
 }
 
+bool InputClass::IsUpPressed() {
+	if (m_keyboardState[DIK_W] & 0x80)
+	{
+		return true;
+	}
 
+	return false;
+}
+
+bool InputClass::IsDownPressed() {
+	if (m_keyboardState[DIK_S] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsLeftPressed() {
+	if (m_keyboardState[DIK_A] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+bool InputClass::IsRightPressed() {
+	if (m_keyboardState[DIK_D] & 0x80)
+	{
+		return true;
+	}
+	return false;
+}
 bool InputClass::IsEscapePressed()
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.

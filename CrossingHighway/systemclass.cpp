@@ -216,6 +216,19 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	if (m_Input->IsUpPressed()) {
+		m_Graphics->camera_Y += 0.1f;
+	}
+	if (m_Input->IsDownPressed()) {
+		m_Graphics->camera_Y -= 0.1f;
+	}
+	if (m_Input->IsLeftPressed()) {
+		m_Graphics->camera_X -= 0.1f;
+	}
+	if (m_Input->IsRightPressed()) {
+		m_Graphics->camera_X += 0.1f;
+	}
+
 	// Get the location of the mouse from the input object,
 //	m_Input->GetMouseLocation(mouseX, mouseY);
 

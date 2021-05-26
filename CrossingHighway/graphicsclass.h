@@ -38,6 +38,10 @@ public:
 	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
+	float camera_X;
+	float camera_Y;
+	float camera_Z;
+
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame(int, int);

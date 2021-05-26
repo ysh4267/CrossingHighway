@@ -39,7 +39,7 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Run();
-
+	
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
 private:

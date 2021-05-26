@@ -16,6 +16,10 @@ GraphicsClass::GraphicsClass()
 	m_Bitmap = 0;
 
 	m_Text = 0;
+
+	camera_X = 0.0f;
+	camera_Y = 10.0f;
+	camera_Z = -10.0f;
 }
 
 
@@ -429,7 +433,8 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 	}
 
 	// Set the position of the camera.
-//	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+
+	m_Camera->SetPosition(camera_X, camera_Y, camera_Z);
 
 	return true;
 }
@@ -490,7 +495,7 @@ bool GraphicsClass::Render(float rotation)
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	//D3DXMatrixRotationY(&worldMatrix, rotation);
 	D3DXMATRIX floor1WorldMatrix, floor2WorldMatrix, car1WorldMatrix, car2WorldMatrix, truck1WorldMatrix, truck2WorldMatrix, bus1WorldMatrix, bus2WorldMatrix;
-	int infMapZ = 0;
+	float infMapZ = 0.0f;
 	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMapZ -10);
 	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMapZ+10);
 	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMapZ+4);

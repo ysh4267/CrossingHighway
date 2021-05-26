@@ -38,6 +38,10 @@ public:
 	void Shutdown();
 	bool Frame();
 
+	bool IsUpPressed();
+	bool IsDownPressed();
+	bool IsLeftPressed();
+	bool IsRightPressed();
 	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
 
