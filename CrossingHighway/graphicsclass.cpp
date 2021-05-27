@@ -42,6 +42,14 @@ GraphicsClass::~GraphicsClass()
 {
 }
 
+bool GraphicsClass::CheckCubeIntersection(D3DXVECTOR3* vMin1, D3DXVECTOR3* vMax1, D3DXVECTOR3* vMin2, D3DXVECTOR3* vMax2)
+{
+	if (vMin1->x <= vMax2->x && vMax1->x >= vMin2->x &&
+		vMin1->y <= vMax2->y && vMax1->y >= vMin2->y &&
+		vMin1->z <= vMax2->z && vMax1->z >= vMin2->z)
+		return true;
+	return false;
+}
 
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
@@ -84,7 +92,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "data/player_model.obj", L"data/Car_04.png");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "data/player.obj", L"data/playertexture.png");
 
 	if (!result)
 	{
@@ -705,7 +713,7 @@ bool GraphicsClass::Render(float rotation)
 	m_D3D->TurnZBufferOn();
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	//D3DXMatrixRotationY(&worldMatrix, rotation);
+	D3DXMatrixRotationY(&worldMatrix, rotation);
 	D3DXMATRIX PlayerWorldMatrix, floor1WorldMatrix, floor2WorldMatrix, 
 		car1WorldMatrix, car2WorldMatrix, car3WorldMatrix,
 		suv1WorldMatrix, suv2WorldMatrix, suv3WorldMatrix, 
@@ -800,7 +808,7 @@ bool GraphicsClass::Render(float rotation)
 	m_car3Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car3Model->GetIndexCount(), car3WorldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car3Model->GetIndexCount(), worldMatrix * car3WorldMatrix, viewMatrix, projectionMatrix,
 		m_car3Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)

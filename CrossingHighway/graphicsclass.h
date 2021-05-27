@@ -55,6 +55,7 @@ public:
 	bool Frame(int, int, float);
 	bool Render();
 	bool Render(float);
+	bool CheckCubeIntersection(D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*);
 
 private:
 	D3DClass* m_D3D;
