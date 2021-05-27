@@ -18,6 +18,7 @@ GraphicsClass::GraphicsClass()
 
 	m_SystemPlayerV = { 0.0f, 0.0f, 0.0f };
 	m_PlayerV = { 0.0f, 0.0f, 0.0f };
+	m_PlayerRotation = { 0.0f, 0.0f, 0.0f };
 
 	camera_X = 0.0f;
 	camera_Y = 0.0f;
@@ -714,13 +715,14 @@ bool GraphicsClass::Render(float rotation)
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	D3DXMatrixRotationY(&worldMatrix, rotation);
-	D3DXMATRIX PlayerWorldMatrix, floor1WorldMatrix, floor2WorldMatrix, 
+	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix, 
 		car1WorldMatrix, car2WorldMatrix, car3WorldMatrix,
 		suv1WorldMatrix, suv2WorldMatrix, suv3WorldMatrix, 
 		truck1WorldMatrix, truck2WorldMatrix, truck3WorldMatrix,
 		bus1WorldMatrix, bus2WorldMatrix, bus3WorldMatrix;
 	
 	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.05f);
+	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
 
 	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
 	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
@@ -748,7 +750,7 @@ bool GraphicsClass::Render(float rotation)
 	m_Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), PlayerWorldMatrix, viewMatrix, projectionMatrix,
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), PlayerRotationMatrix*PlayerWorldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)

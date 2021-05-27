@@ -218,15 +218,20 @@ bool SystemClass::Frame()
 
 	if (m_Input->IsUpPressed() && (m_Graphics->m_SystemPlayerV.z - m_Graphics->m_PlayerV.z) <= 0.1) {
 		m_Graphics->m_SystemPlayerV.z += 5.0f;
+		m_Graphics->m_PlayerRotation.y = 0.0f * D3DX_PI / 180;
 	}
 	if (m_Input->IsDownPressed() && (m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.1) {
 		m_Graphics->m_SystemPlayerV.z -= 5.0f;
+		m_Graphics->m_PlayerRotation.y = 180.0f * D3DX_PI / 180;
 	}
 	if (m_Input->IsLeftPressed() && (m_Graphics->m_PlayerV.x - m_Graphics->m_SystemPlayerV.x) <= 0.1) {
 		m_Graphics->m_SystemPlayerV.x -= 5.0f;
+		m_Graphics->m_PlayerRotation.y = 270.0f * D3DX_PI / 180;
+
 	}
 	if (m_Input->IsRightPressed() && (m_Graphics->m_SystemPlayerV.x - m_Graphics->m_PlayerV.x) <= 0.1) {
 		m_Graphics->m_SystemPlayerV.x += 5.0f;
+		m_Graphics->m_PlayerRotation.y = 90.0f * D3DX_PI / 180;
 	}
 
 	// Get the location of the mouse from the input object,
