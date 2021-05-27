@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "graphicsclass.h"
 
-
 GraphicsClass::GraphicsClass()
 {
 	m_D3D = 0;
@@ -16,10 +15,11 @@ GraphicsClass::GraphicsClass()
 	m_Bitmap = 0;
 
 	m_Text = 0;
-
+	m_SystemPlayerV = { 0.0f, 30.0f, 0.0f };
+	m_PlayerV = { 0.0f, 0.0f, 0.0f };
 	camera_X = 0.0f;
-	camera_Y = 10.0f;
-	camera_Z = -10.0f;
+	camera_Y = 30.0f;
+	camera_Z = 0.0f;
 }
 
 
@@ -63,7 +63,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 40.0f, 00.0f);
-	m_Camera->SetRotation(90.0f, 0.0f, 0.0f);
+	m_Camera->SetRotation(60.0f, -15.0f, 0.0f);
 	//m_Camera->SetPosition(0.0f, 0.5f, -3.0f);
 
 	// Create the model object.
@@ -106,7 +106,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/plane.obj", L"data/seafloor.dds");
+	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/grass_plane.obj", L"data/Car_01.png");
 
 	if (!result)
 	{
@@ -236,7 +236,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Initialize the light object.
 	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(0.0f, -1.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(32.0f);
 
@@ -434,7 +434,7 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 
 	// Set the position of the camera.
 
-	m_Camera->SetPosition(camera_X, camera_Y, camera_Z);
+	m_Camera->SetPosition(m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
 
 	return true;
 }
@@ -496,14 +496,15 @@ bool GraphicsClass::Render(float rotation)
 	//D3DXMatrixRotationY(&worldMatrix, rotation);
 	D3DXMATRIX floor1WorldMatrix, floor2WorldMatrix, car1WorldMatrix, car2WorldMatrix, truck1WorldMatrix, truck2WorldMatrix, bus1WorldMatrix, bus2WorldMatrix;
 	float infMapZ = 0.0f;
+	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1);
 	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMapZ -10);
-	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMapZ+10);
-	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMapZ+4);
-	D3DXMatrixTranslation(&car2WorldMatrix, carsX[8], 0, infMapZ -4);
-	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMapZ+8);
-	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[3], 0, infMapZ -8);
-	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMapZ+14);
-	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMapZ -14);
+	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMapZ-15);
+	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMapZ);
+	D3DXMatrixTranslation(&car2WorldMatrix, carsX[2], 0, infMapZ - 5);
+	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMapZ+10);
+	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[3], 0, infMapZ -10);
+	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMapZ+5);
+	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMapZ -15);
 
 	for (int i = 0; i < 9; i++)
 	{
