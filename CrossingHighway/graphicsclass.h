@@ -42,6 +42,9 @@ public:
 	float camera_Y;
 	float camera_Z;
 
+	D3DXVECTOR3 m_PlayerV;
+	D3DXVECTOR3 m_SystemPlayerV;
+
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame(int, int);
@@ -64,7 +67,6 @@ private:
 	ModelClass* m_bus2Model;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
 

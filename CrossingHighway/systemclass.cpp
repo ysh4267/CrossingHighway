@@ -216,17 +216,17 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	if (m_Input->IsUpPressed()) {
-		m_Graphics->camera_Y += 0.1f;
+	if (m_Input->IsUpPressed() && (m_Graphics->m_SystemPlayerV.z - m_Graphics->m_PlayerV.z) <= 0.1) {
+		m_Graphics->m_SystemPlayerV.z += 5.0f;
 	}
-	if (m_Input->IsDownPressed()) {
-		m_Graphics->camera_Y -= 0.1f;
+	if (m_Input->IsDownPressed() && (m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.1) {
+		m_Graphics->m_SystemPlayerV.z -= 5.0f;
 	}
-	if (m_Input->IsLeftPressed()) {
-		m_Graphics->camera_X -= 0.1f;
+	if (m_Input->IsLeftPressed() && (m_Graphics->m_PlayerV.x - m_Graphics->m_SystemPlayerV.x) <= 0.1) {
+		m_Graphics->m_SystemPlayerV.x -= 5.0f;
 	}
-	if (m_Input->IsRightPressed()) {
-		m_Graphics->camera_X += 0.1f;
+	if (m_Input->IsRightPressed() && (m_Graphics->m_SystemPlayerV.x - m_Graphics->m_PlayerV.x) <= 0.1) {
+		m_Graphics->m_SystemPlayerV.x += 5.0f;
 	}
 
 	// Get the location of the mouse from the input object,
