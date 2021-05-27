@@ -15,11 +15,21 @@ GraphicsClass::GraphicsClass()
 	m_Bitmap = 0;
 
 	m_Text = 0;
-	m_SystemPlayerV = { 5.0f, 30.0f, -20.0f };
+
+	m_SystemPlayerV = { 0.0f, 0.0f, 0.0f };
 	m_PlayerV = { 0.0f, 0.0f, 0.0f };
+
 	camera_X = 0.0f;
-	camera_Y = 30.0f;
+	camera_Y = 0.0f;
 	camera_Z = 0.0f;
+
+	infMap1Z = 0.0f;
+	infMap2Z = 0.0f;
+
+	for (int i = 0; i < maxCarNum; i++)
+	{
+		carsX[i] = (4.0f * i) - 10.0f;
+	}
 }
 
 
@@ -74,7 +84,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/Car_04.png");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "data/player_model.obj", L"data/Car_04.png");
 
 	if (!result)
 	{
@@ -106,14 +116,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/player_model.obj", L"data/Car_01.png");
+	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/map_01.obj", L"data/map_01_texture.png");
 
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-
+	/////////////////////////////////////////////////////////////////////////////////Car
 	// Create the model object.
 	m_car1Model = new ModelClass;
 	if (!m_car1Model)
@@ -122,7 +132,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_car1Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_01.png");
+	result = m_car1Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_07.png");
 
 	if (!result)
 	{
@@ -138,7 +148,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_car2Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_02.png");
+	result = m_car2Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_08.png");
 
 	if (!result)
 	{
@@ -146,6 +156,70 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create the model object.
+	m_car3Model = new ModelClass;
+	if (!m_car3Model)
+	{
+		return false;
+	}
+	
+	// Initialize the model object.
+	result = m_car3Model->Initialize(m_D3D->GetDevice(), "data/car.obj", L"data/Car_09.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+	//////////////////////////////////////////////////////////////////////////Suv
+	// Create the model object.
+	m_suv1Model = new ModelClass;
+	if (!m_suv1Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_suv1Model->Initialize(m_D3D->GetDevice(), "data/car_2.obj", L"data/Car_01.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_suv2Model = new ModelClass;
+	if (!m_suv2Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_suv2Model->Initialize(m_D3D->GetDevice(), "data/car_2.obj", L"data/Car_02.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
+	m_suv3Model = new ModelClass;
+	if (!m_suv3Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_suv3Model->Initialize(m_D3D->GetDevice(), "data/car_2.obj", L"data/Car_03.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+	//////////////////////////////////////////////////////////////////Truck
 	// Create the model object.
 	m_truck1Model = new ModelClass;
 	if (!m_truck1Model)
@@ -179,6 +253,22 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create the model object.
+	m_truck3Model = new ModelClass;
+	if (!m_truck3Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_truck3Model->Initialize(m_D3D->GetDevice(), "data/truck.obj", L"data/Car_06.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model object.
 	m_bus1Model = new ModelClass;
 	if (!m_bus1Model)
 	{
@@ -186,7 +276,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_bus1Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_11.png");
+	result = m_bus1Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_10.png");
 
 	if (!result)
 	{
@@ -202,7 +292,22 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_bus2Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_12.png");
+	result = m_bus2Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_11.png");
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+	// Create the model object.
+	m_bus3Model = new ModelClass;
+	if (!m_bus3Model)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_bus3Model->Initialize(m_D3D->GetDevice(), "data/bus.obj", L"data/Car_12.png");
 
 	if (!result)
 	{
@@ -291,11 +396,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	for (int i = 0; i < 9; i++)
-	{
-		carsX[i] = (2 * i) - 10;
-	}
-
 	return true;
 }
 
@@ -339,6 +439,118 @@ void GraphicsClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}
+
+	// Release the model object.
+	if (m_floor1Model)
+	{
+		m_floor1Model->Shutdown();
+		delete m_floor1Model;
+		m_floor1Model = 0;
+	}
+
+	// Release the model object.
+	if (m_floor2Model)
+	{
+		m_floor2Model->Shutdown();
+		delete m_floor2Model;
+		m_floor2Model = 0;
+	}
+
+	// Release the model object.
+	if (m_car1Model)
+	{
+		m_car1Model->Shutdown();
+		delete m_car1Model;
+		m_car1Model = 0;
+	}
+
+	// Release the model object.
+	if (m_car2Model)
+	{
+		m_car2Model->Shutdown();
+		delete m_car2Model;
+		m_car2Model = 0;
+	}
+
+	// Release the model object.
+	if (m_car3Model)
+	{
+		m_car3Model->Shutdown();
+		delete m_car3Model;
+		m_car3Model = 0;
+	}
+
+	// Release the model object.
+	if (m_suv1Model)
+	{
+		m_suv1Model->Shutdown();
+		delete m_suv1Model;
+		m_suv1Model = 0;
+	}
+
+	// Release the model object.
+	if (m_suv2Model)
+	{
+		m_suv2Model->Shutdown();
+		delete m_suv2Model;
+		m_suv2Model = 0;
+	}
+
+	// Release the model object.
+	if (m_suv3Model)
+	{
+		m_suv3Model->Shutdown();
+		delete m_suv3Model;
+		m_suv3Model = 0;
+	}
+
+	// Release the model object.
+	if (m_truck1Model)
+	{
+		m_truck1Model->Shutdown();
+		delete m_truck1Model;
+		m_truck1Model = 0;
+	}
+
+	// Release the model object.
+	if (m_truck2Model)
+	{
+		m_truck2Model->Shutdown();
+		delete m_truck2Model;
+		m_truck2Model = 0;
+	}
+
+	// Release the model object.
+	if (m_truck3Model)
+	{
+		m_truck3Model->Shutdown();
+		delete m_truck3Model;
+		m_truck3Model = 0;
+	}
+
+	// Release the model object.
+	if (m_bus1Model)
+	{
+		m_bus1Model->Shutdown();
+		delete m_bus1Model;
+		m_bus1Model = 0;
+	}
+
+	// Release the model object.
+	if (m_bus2Model)
+	{
+		m_bus2Model->Shutdown();
+		delete m_bus2Model;
+		m_bus2Model = 0;
+	}
+
+	// Release the model object.
+	if (m_bus3Model)
+	{
+		m_bus3Model->Shutdown();
+		delete m_bus3Model;
+		m_bus3Model = 0;
 	}
 
 	// Release the camera object.
@@ -434,7 +646,7 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 
 	// Set the position of the camera.
 
-	m_Camera->SetPosition(m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	m_Camera->SetPosition(m_PlayerV.x + 5, m_PlayerV.y + 30, m_PlayerV.z - 10);
 
 	return true;
 }
@@ -494,22 +706,46 @@ bool GraphicsClass::Render(float rotation)
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	//D3DXMatrixRotationY(&worldMatrix, rotation);
-	D3DXMATRIX floor1WorldMatrix, floor2WorldMatrix, car1WorldMatrix, car2WorldMatrix, truck1WorldMatrix, truck2WorldMatrix, bus1WorldMatrix, bus2WorldMatrix;
-	float infMapZ = 0.0f;
-	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1);
-	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMapZ -10);
-	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMapZ-15);
-	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMapZ);
-	D3DXMatrixTranslation(&car2WorldMatrix, carsX[2], 0, infMapZ - 5);
-	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMapZ+10);
-	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[3], 0, infMapZ -10);
-	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMapZ+5);
-	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMapZ -15);
+	D3DXMATRIX PlayerWorldMatrix, floor1WorldMatrix, floor2WorldMatrix, 
+		car1WorldMatrix, car2WorldMatrix, car3WorldMatrix,
+		suv1WorldMatrix, suv2WorldMatrix, suv3WorldMatrix, 
+		truck1WorldMatrix, truck2WorldMatrix, truck3WorldMatrix,
+		bus1WorldMatrix, bus2WorldMatrix, bus3WorldMatrix;
+	
+	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.05f);
 
-	for (int i = 0; i < 9; i++)
+	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
+	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z + 100);
+	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMap1Z + 40);
+	D3DXMatrixTranslation(&car2WorldMatrix, carsX[2], 0, infMap1Z + 5);
+	D3DXMatrixTranslation(&car3WorldMatrix, carsX[4], 0, infMap1Z + 15);
+	D3DXMatrixTranslation(&suv1WorldMatrix, carsX[6], 0, infMap1Z + 40);
+	D3DXMatrixTranslation(&suv2WorldMatrix, carsX[8], 0, infMap1Z + 35);
+	D3DXMatrixTranslation(&suv3WorldMatrix, carsX[11], 0, infMap1Z + 5);
+	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMap1Z+10);
+	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[10], 0, infMap1Z + 15);
+	D3DXMatrixTranslation(&truck3WorldMatrix, carsX[3], 0, infMap1Z + 30);
+	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMap1Z + 35);
+	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMap1Z + 30);
+	D3DXMatrixTranslation(&bus3WorldMatrix, carsX[9], 0, infMap1Z + 35);
+
+	for (int i = 0; i < maxCarNum; i++)
 	{
-		carsX[i] += 0.05;
-		if (carsX[i] > 10) carsX[i] = -10;
+		carsX[i] += 0.05f;
+		if (carsX[i] > 30) carsX[i] = -30;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), PlayerWorldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
 	}
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
@@ -561,6 +797,54 @@ bool GraphicsClass::Render(float rotation)
 	}
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_car3Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_car3Model->GetIndexCount(), car3WorldMatrix, viewMatrix, projectionMatrix,
+		m_car3Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_suv1Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_suv1Model->GetIndexCount(), suv1WorldMatrix, viewMatrix, projectionMatrix,
+		m_suv1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_suv2Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_suv2Model->GetIndexCount(), suv2WorldMatrix, viewMatrix, projectionMatrix,
+		m_suv2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_suv3Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_suv3Model->GetIndexCount(), suv3WorldMatrix, viewMatrix, projectionMatrix,
+		m_suv3Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_truck1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
@@ -585,6 +869,18 @@ bool GraphicsClass::Render(float rotation)
 	}
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_truck3Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_truck3Model->GetIndexCount(), truck3WorldMatrix, viewMatrix, projectionMatrix,
+		m_truck3Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_bus1Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
@@ -602,6 +898,18 @@ bool GraphicsClass::Render(float rotation)
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus2Model->GetIndexCount(), bus2WorldMatrix, viewMatrix, projectionMatrix,
 		m_bus2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_bus3Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_bus3Model->GetIndexCount(), bus3WorldMatrix, viewMatrix, projectionMatrix,
+		m_bus3Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
 	{
