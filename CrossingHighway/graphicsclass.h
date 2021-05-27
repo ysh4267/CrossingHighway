@@ -26,7 +26,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-
+const int maxCarNum = 12;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: GraphicsClass
@@ -45,6 +45,10 @@ public:
 	D3DXVECTOR3 m_PlayerV;
 	D3DXVECTOR3 m_SystemPlayerV;
 
+	float infMap1Z;
+	float infMap2Z;
+	float carsX[maxCarNum];
+
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame(int, int);
@@ -53,7 +57,6 @@ public:
 	bool Render(float);
 
 private:
-	float carsX[9];
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
@@ -61,10 +64,16 @@ private:
 	ModelClass* m_floor2Model;
 	ModelClass* m_car1Model;
 	ModelClass* m_car2Model;
+	ModelClass* m_car3Model;
+	ModelClass* m_suv1Model;
+	ModelClass* m_suv2Model;
+	ModelClass* m_suv3Model;
 	ModelClass* m_truck1Model;
 	ModelClass* m_truck2Model;
+	ModelClass* m_truck3Model;
 	ModelClass* m_bus1Model;
 	ModelClass* m_bus2Model;
+	ModelClass* m_bus3Model;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
