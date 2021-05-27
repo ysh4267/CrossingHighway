@@ -15,7 +15,7 @@ GraphicsClass::GraphicsClass()
 	m_Bitmap = 0;
 
 	m_Text = 0;
-	m_SystemPlayerV = { 0.0f, 30.0f, 0.0f };
+	m_SystemPlayerV = { 5.0f, 30.0f, -20.0f };
 	m_PlayerV = { 0.0f, 0.0f, 0.0f };
 	camera_X = 0.0f;
 	camera_Y = 30.0f;
@@ -90,7 +90,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_floor1Model->Initialize(m_D3D->GetDevice(), "data/plane.obj", L"data/seafloor.dds");
+	result = m_floor1Model->Initialize(m_D3D->GetDevice(), "data/map_01.obj", L"data/map_01_texture.png");
 
 	if (!result)
 	{
@@ -106,7 +106,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/grass_plane.obj", L"data/Car_01.png");
+	result = m_floor2Model->Initialize(m_D3D->GetDevice(), "data/player_model.obj", L"data/Car_01.png");
 
 	if (!result)
 	{
