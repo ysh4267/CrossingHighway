@@ -158,6 +158,8 @@
     <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="particleshaderclass.cpp" />
+    <ClCompile Include="particlesystemclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="particleshaderclass.h" />
+    <ClInclude Include="particlesystemclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textclass.h" />
     <ClInclude Include="textureclass.h" />
@@ -188,6 +192,8 @@
     <None Include="font.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
+    <None Include="particle.ps" />
+    <None Include="particle.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
   </ItemGroup>

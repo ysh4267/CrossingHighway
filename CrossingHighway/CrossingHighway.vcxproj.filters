@@ -69,6 +69,12 @@
     <ClCompile Include="timerclass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="particleshaderclass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="particlesystemclass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmapclass.h">
@@ -122,6 +128,12 @@
     <ClInclude Include="timerclass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="particleshaderclass.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="particlesystemclass.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="font.ps" />
@@ -130,5 +142,11 @@
     <None Include="light.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
+    <None Include="particle.vs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="particle.ps">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

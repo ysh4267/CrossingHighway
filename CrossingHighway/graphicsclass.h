@@ -19,6 +19,9 @@
 
 #include "textclass.h"
 
+#include "particleshaderclass.h"
+#include "particlesystemclass.h"
+
 /////////////
 // GLOBALS //
 /////////////
@@ -80,6 +83,8 @@ private:
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
+	ParticleShaderClass* m_ParticleShader; 
+	ParticleSystemClass* m_ParticleSystem;
 
 	TextClass* m_Text;
 };

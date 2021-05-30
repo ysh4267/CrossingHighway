@@ -21,12 +21,14 @@ GraphicsClass::GraphicsClass()
 	m_PlayerRotation = { 0.0f, 0.0f, 0.0f };
 
 	camera_X = 0.0f;
-	camera_Y = 0.0f;
-	camera_Z = 0.0f;
+	camera_Y = -2.0f;
+	camera_Z = -10.0f;
 
 	infMap1Z = 0.0f;
 	infMap2Z = 0.0f;
 
+	m_ParticleShader = 0;
+	m_ParticleSystem = 0;
 	for (int i = 0; i < maxCarNum; i++)
 	{
 		carsX[i] = (4.0f * i) - 10.0f;
@@ -85,12 +87,40 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetRotation(60.0f, -15.0f, 0.0f);
 	//m_Camera->SetPosition(0.0f, 0.5f, -3.0f);
 
+		m_ParticleShader = new ParticleShaderClass;
+	if (!m_ParticleShader)
+	{
+		return false;
+	}
+
+	// Initialize the particle shader object.
+	result = m_ParticleShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the particle shader object.", L"Error", MB_OK);
+		return false;
+	}
+	// Create the particle system object.
+	m_ParticleSystem = new ParticleSystemClass;
+	if (!m_ParticleSystem)
+	{
+		return false;
+	}
+
+	// Initialize the particle system object.
+	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/star.dds");
+	if (!result)
+	{
+		return false;
+	}
 	// Create the model object.
 	m_Model = new ModelClass;
 	if (!m_Model)
 	{
 		return false;
 	}
+
+#pragma region ¸ðµ¨ ¼±¾ð
 
 	// Initialize the model object.
 	result = m_Model->Initialize(m_D3D->GetDevice(), "data/player.obj", L"data/playertexture.png");
@@ -323,7 +353,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-
+#pragma endregion ¸ðµ¨ ¼±¾ð
 
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -562,6 +592,20 @@ void GraphicsClass::Shutdown()
 		m_bus3Model = 0;
 	}
 
+	if (m_ParticleSystem)
+	{
+		m_ParticleSystem->Shutdown();
+		delete m_ParticleSystem;
+		m_ParticleSystem = 0;
+	}
+
+	// Release the particle shader object.
+	if (m_ParticleShader)
+	{
+		m_ParticleShader->Shutdown();
+		delete m_ParticleShader;
+		m_ParticleShader = 0;
+	}
 	// Release the camera object.
 	if(m_Camera)
 	{
@@ -624,6 +668,7 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 	bool result;
 	static float rotation = 0.0f;
 
+	m_ParticleSystem->Frame(frameTime, m_D3D->GetDeviceContext());
 
 	// Update the rotation variable each frame.
 	rotation += (float)D3DX_PI * 0.005f;
@@ -663,9 +708,35 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
+		car1WorldMatrix, car2WorldMatrix, car3WorldMatrix,
+		suv1WorldMatrix, suv2WorldMatrix, suv3WorldMatrix,
+		truck1WorldMatrix, truck2WorldMatrix, truck3WorldMatrix,
+		bus1WorldMatrix, bus2WorldMatrix, bus3WorldMatrix,
+		particleMatrix, particleScaleMatrix;
 	bool result;
 
 
+	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.05f);
+	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
+	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	D3DXMatrixTranslation(&particleMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
+	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z + 100);
+	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMap1Z + 40);
+	D3DXMatrixTranslation(&car2WorldMatrix, carsX[2], 0, infMap1Z + 5);
+	D3DXMatrixTranslation(&car3WorldMatrix, carsX[4], 0, infMap1Z + 15);
+	D3DXMatrixTranslation(&suv1WorldMatrix, carsX[6], 0, infMap1Z + 40);
+	D3DXMatrixTranslation(&suv2WorldMatrix, carsX[8], 0, infMap1Z + 35);
+	D3DXMatrixTranslation(&suv3WorldMatrix, carsX[11], 0, infMap1Z + 5);
+	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMap1Z + 10);
+	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[10], 0, infMap1Z + 15);
+	D3DXMatrixTranslation(&truck3WorldMatrix, carsX[3], 0, infMap1Z + 30);
+	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMap1Z + 35);
+	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMap1Z + 30);
+	D3DXMatrixTranslation(&bus3WorldMatrix, carsX[9], 0, infMap1Z + 35);
+
+	D3DXMatrixScaling(&particleScaleMatrix, 10.0f, 10.0f, 10.0f);
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -678,6 +749,21 @@ bool GraphicsClass::Render(float rotation)
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 
 	m_D3D->GetOrthoMatrix(orthoMatrix);
+
+	D3DXMatrixRotationY(&worldMatrix, rotation);
+	m_D3D->TurnOnAlphaBlending();
+
+	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the texture shader.
+	result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), car3WorldMatrix , viewMatrix, projectionMatrix,
+		m_ParticleSystem->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+	m_D3D->TurnOffAlphaBlending();
+
 
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
@@ -695,8 +781,6 @@ bool GraphicsClass::Render(float rotation)
 	//{
 	//	return false;
 	//}
-
-
 	// Turn on the alpha blending before rendering the text.
 	m_D3D->TurnOnAlphaBlending();
 
@@ -714,32 +798,7 @@ bool GraphicsClass::Render(float rotation)
 	m_D3D->TurnZBufferOn();
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	D3DXMatrixRotationY(&worldMatrix, rotation);
-	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix, 
-		car1WorldMatrix, car2WorldMatrix, car3WorldMatrix,
-		suv1WorldMatrix, suv2WorldMatrix, suv3WorldMatrix, 
-		truck1WorldMatrix, truck2WorldMatrix, truck3WorldMatrix,
-		bus1WorldMatrix, bus2WorldMatrix, bus3WorldMatrix;
 	
-	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.05f);
-	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
-
-	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
-	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
-	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z + 100);
-	D3DXMatrixTranslation(&car1WorldMatrix, carsX[0], 0, infMap1Z + 40);
-	D3DXMatrixTranslation(&car2WorldMatrix, carsX[2], 0, infMap1Z + 5);
-	D3DXMatrixTranslation(&car3WorldMatrix, carsX[4], 0, infMap1Z + 15);
-	D3DXMatrixTranslation(&suv1WorldMatrix, carsX[6], 0, infMap1Z + 40);
-	D3DXMatrixTranslation(&suv2WorldMatrix, carsX[8], 0, infMap1Z + 35);
-	D3DXMatrixTranslation(&suv3WorldMatrix, carsX[11], 0, infMap1Z + 5);
-	D3DXMatrixTranslation(&truck1WorldMatrix, carsX[5], 0, infMap1Z+10);
-	D3DXMatrixTranslation(&truck2WorldMatrix, carsX[10], 0, infMap1Z + 15);
-	D3DXMatrixTranslation(&truck3WorldMatrix, carsX[3], 0, infMap1Z + 30);
-	D3DXMatrixTranslation(&bus1WorldMatrix, carsX[1], 0, infMap1Z + 35);
-	D3DXMatrixTranslation(&bus2WorldMatrix, carsX[7], 0, infMap1Z + 30);
-	D3DXMatrixTranslation(&bus3WorldMatrix, carsX[9], 0, infMap1Z + 35);
-
 	for (int i = 0; i < maxCarNum; i++)
 	{
 		carsX[i] += 0.05f;
@@ -757,7 +816,7 @@ bool GraphicsClass::Render(float rotation)
 	{
 		return false;
 	}
-
+	/*
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_floor1Model->Render(m_D3D->GetDeviceContext());
 
@@ -781,7 +840,7 @@ bool GraphicsClass::Render(float rotation)
 	{
 		return false;
 	}
-
+	*/
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_car1Model->Render(m_D3D->GetDeviceContext());
 
@@ -925,7 +984,7 @@ bool GraphicsClass::Render(float rotation)
 	{
 		return false;
 	}
-
+	
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 
