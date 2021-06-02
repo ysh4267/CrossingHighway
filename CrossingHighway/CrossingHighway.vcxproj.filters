@@ -128,11 +128,11 @@
     <ClInclude Include="timerclass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="particleshaderclass.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="particlesystemclass.h">
-      <Filter>소스 파일</Filter>
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="particleshaderclass.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,11 +142,7 @@
     <None Include="light.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
-    <None Include="particle.vs">
-      <Filter>소스 파일</Filter>
-    </None>
-    <None Include="particle.ps">
-      <Filter>소스 파일</Filter>
-    </None>
+    <None Include="particle.ps" />
+    <None Include="particle.vs" />
   </ItemGroup>
 </Project>

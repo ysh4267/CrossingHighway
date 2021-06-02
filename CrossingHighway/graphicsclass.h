@@ -51,7 +51,6 @@ public:
 
 	float infMap1Z;
 	float infMap2Z;
-	float carsX[maxCarNum];
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
@@ -62,23 +61,23 @@ public:
 	bool CheckCubeIntersection(D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*);
 
 private:
+	struct CarModelInfo
+	{
+		ModelClass* m_carModel;
+		D3DXVECTOR2 worldPosition;
+		D3DXMATRIX worldMatrix;
+		D3DXVECTOR2 maxSize;
+		D3DXVECTOR2 minSize;
+	};
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
 	ModelClass* m_floor1Model;
 	ModelClass* m_floor2Model;
-	ModelClass* m_car1Model;
-	ModelClass* m_car2Model;
-	ModelClass* m_car3Model;
-	ModelClass* m_suv1Model;
-	ModelClass* m_suv2Model;
-	ModelClass* m_suv3Model;
-	ModelClass* m_truck1Model;
-	ModelClass* m_truck2Model;
-	ModelClass* m_truck3Model;
-	ModelClass* m_bus1Model;
-	ModelClass* m_bus2Model;
-	ModelClass* m_bus3Model;
+	CarModelInfo carObject[maxCarNum];
+	CarModelInfo suvObject[maxCarNum];
+	CarModelInfo truckObject[maxCarNum];
+	CarModelInfo busObject[maxCarNum];
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
