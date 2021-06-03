@@ -349,9 +349,12 @@ void ParticleSystemClass::EmitParticles(float frameTime)
 
 		velocity = m_particleVelocity + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation;
 
-		red   = (((float)rand()-(float)rand())/RAND_MAX) + 0.5f;
-		green = (((float)rand()-(float)rand())/RAND_MAX) + 0.5f;
-		blue  = (((float)rand()-(float)rand())/RAND_MAX) + 0.5f;
+		//red   = (((float)rand()-(float)rand())/RAND_MAX) + 0.5f;
+		//green = (((float)rand()-(float)rand())/RAND_MAX) + 0.5f;
+		//blue  = (((float)rand()-(float)rand())/RAND_MAX) + 0.5f;
+		red = 1;
+		green = 1;
+		blue = 1;
 
 		// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
 		// We will sort using Z depth so we need to find where in the list the particle should be inserted.
