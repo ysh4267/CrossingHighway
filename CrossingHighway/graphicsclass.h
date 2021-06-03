@@ -29,7 +29,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-const int maxCarNum = 12;
+const int maxCarNum = 24;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: GraphicsClass
@@ -59,6 +59,7 @@ public:
 	bool Render();
 	bool Render(float);
 	bool CheckCubeIntersection(D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*);
+	void CarPositionInitialize(int);
 
 private:
 	struct CarModelInfo

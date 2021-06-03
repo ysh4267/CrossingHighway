@@ -362,6 +362,17 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	CarPositionInitialize(0);
+	CarPositionInitialize(12);
+
+	for (int i = 12; i < 24; i++)
+	{
+		carObject[i].worldPosition.y += 100;
+		suvObject[i].worldPosition.y += 100;
+		truckObject[i].worldPosition.y += 100;
+		busObject[i].worldPosition.y += 100;
+	}
+
 	return true;
 }
 
@@ -576,6 +587,112 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 	return true;
 }
 
+void GraphicsClass::CarPositionInitialize(int carNum) {
+	//5, 10, 15, 30, 35, 40, 45, 55, 60, 75, 80, 85
+	carObject[0 + carNum].worldPosition.x = 0;
+	carObject[0 + carNum].worldPosition.y = 5;
+	carObject[1 + carNum].worldPosition.x = 14;
+	carObject[1 + carNum].worldPosition.y = 15;
+	carObject[2 + carNum].worldPosition.x = -4;
+	carObject[2 + carNum].worldPosition.y = 30;
+	carObject[3 + carNum].worldPosition.x = 6;
+	carObject[3 + carNum].worldPosition.y = 85;
+	carObject[4 + carNum].worldPosition.x = -10;
+	carObject[4 + carNum].worldPosition.y = 40;
+	carObject[5 + carNum].worldPosition.x = -8;
+	carObject[5 + carNum].worldPosition.y = 75;
+	carObject[6 + carNum].worldPosition.x = -38;
+	carObject[6 + carNum].worldPosition.y = 85;
+	carObject[7 + carNum].worldPosition.x = -28;
+	carObject[7 + carNum].worldPosition.y = 80;
+	carObject[8 + carNum].worldPosition.x = -18;
+	carObject[8 + carNum].worldPosition.y = 55;
+	carObject[9 + carNum].worldPosition.x = -10;
+	carObject[9 + carNum].worldPosition.y = 35;
+	carObject[10 + carNum].worldPosition.x = 46;
+	carObject[10 + carNum].worldPosition.y = 60;
+	carObject[11 + carNum].worldPosition.x = 12;
+	carObject[11 + carNum].worldPosition.y = 80;
+
+
+	suvObject[0 + carNum].worldPosition.x = 0;
+	suvObject[0 + carNum].worldPosition.y = 75;
+	suvObject[1 + carNum].worldPosition.x = 4;
+	suvObject[1 + carNum].worldPosition.y = 10;
+	suvObject[2 + carNum].worldPosition.x = -4;
+	suvObject[2 + carNum].worldPosition.y = 45;
+	suvObject[3 + carNum].worldPosition.x = 44;
+	suvObject[3 + carNum].worldPosition.y = 30;
+	suvObject[4 + carNum].worldPosition.x = 25;
+	suvObject[4 + carNum].worldPosition.y = 35;
+	suvObject[5 + carNum].worldPosition.x = 40;
+	suvObject[5 + carNum].worldPosition.y = 40;
+	suvObject[6 + carNum].worldPosition.x = 40;
+	suvObject[6 + carNum].worldPosition.y = 55;
+	suvObject[7 + carNum].worldPosition.x = 34;
+	suvObject[7 + carNum].worldPosition.y = 80;
+	suvObject[8 + carNum].worldPosition.x = -44;
+	suvObject[8 + carNum].worldPosition.y = 75;
+	suvObject[9 + carNum].worldPosition.x = -40;
+	suvObject[9 + carNum].worldPosition.y = 55;
+	suvObject[10 + carNum].worldPosition.x = -38;
+	suvObject[10 + carNum].worldPosition.y = 35;
+	suvObject[11 + carNum].worldPosition.x = -36;
+	suvObject[11 + carNum].worldPosition.y = 10;
+
+
+	truckObject[0 + carNum].worldPosition.x = -10;
+	truckObject[0 + carNum].worldPosition.y = 10;
+	truckObject[1 + carNum].worldPosition.x = -20;
+	truckObject[1 + carNum].worldPosition.y = 45;
+	truckObject[2 + carNum].worldPosition.x = 14;
+	truckObject[2 + carNum].worldPosition.y = 55;
+	truckObject[3 + carNum].worldPosition.x = 20;
+	truckObject[3 + carNum].worldPosition.y = 75;
+	truckObject[4 + carNum].worldPosition.x = 12;
+	truckObject[4 + carNum].worldPosition.y = 5;
+	truckObject[5 + carNum].worldPosition.x = 24;
+	truckObject[5 + carNum].worldPosition.y = 15;
+	truckObject[6 + carNum].worldPosition.x = 30;
+	truckObject[6 + carNum].worldPosition.y = 10;
+	truckObject[7 + carNum].worldPosition.x = 24;
+	truckObject[7 + carNum].worldPosition.y = 30;
+	truckObject[8 + carNum].worldPosition.x = 16;
+	truckObject[8 + carNum].worldPosition.y = 40;
+	truckObject[9 + carNum].worldPosition.x = -34;
+	truckObject[9 + carNum].worldPosition.y = 30;
+	truckObject[10 + carNum].worldPosition.x = 26;
+	truckObject[10 + carNum].worldPosition.y = 85;
+	truckObject[11 + carNum].worldPosition.x = -24;
+	truckObject[11 + carNum].worldPosition.y = 75;
+
+
+	busObject[0 + carNum].worldPosition.x = 35;
+	busObject[0 + carNum].worldPosition.y = 5;
+	busObject[1 + carNum].worldPosition.x = -20;
+	busObject[1 + carNum].worldPosition.y = 15;
+	busObject[2 + carNum].worldPosition.x = 20;
+	busObject[2 + carNum].worldPosition.y = 45;
+	busObject[3 + carNum].worldPosition.x = 0;
+	busObject[3 + carNum].worldPosition.y = 80;
+	busObject[4 + carNum].worldPosition.x = -16;
+	busObject[4 + carNum].worldPosition.y = 60;
+	busObject[5 + carNum].worldPosition.x = 4;
+	busObject[5 + carNum].worldPosition.y = 35;
+	busObject[6 + carNum].worldPosition.x = -4;
+	busObject[6 + carNum].worldPosition.y = 55;
+	busObject[7 + carNum].worldPosition.x = -16;
+	busObject[7 + carNum].worldPosition.y = 30;
+	busObject[8 + carNum].worldPosition.x = -12;
+	busObject[8 + carNum].worldPosition.y = 85;
+	busObject[9 + carNum].worldPosition.x = -24;
+	busObject[9 + carNum].worldPosition.y = 5;
+	busObject[10 + carNum].worldPosition.x = -24;
+	busObject[10 + carNum].worldPosition.y = 40;
+	busObject[11 + carNum].worldPosition.x = 24;
+	busObject[11 + carNum].worldPosition.y = 60;
+}
+
 bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
@@ -591,18 +708,6 @@ bool GraphicsClass::Render(float rotation)
 	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
 	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z + 100);
 	D3DXMatrixScaling(&particleScaleMatrix, 10.0f, 10.0f, 10.0f);
-
-	for (int i = 0; i < maxCarNum; i++)
-	{
-		carObject[i].worldPosition.x = (float)i * 2;
-		carObject[i].worldPosition.y = 0.0f;
-		suvObject[i].worldPosition.x = (float)i * 2;
-		suvObject[i].worldPosition.y = -5.0f;
-		truckObject[i].worldPosition.x = (float)i * 2;
-		truckObject[i].worldPosition.y = -10.0f;
-		busObject[i].worldPosition.x = (float)i * 2;
-		busObject[i].worldPosition.y = -15.0f;
-	}
 
 	for (int i = 0; i < maxCarNum; i++)
 	{
