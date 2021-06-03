@@ -27,7 +27,7 @@ GraphicsClass::GraphicsClass()
 	camera_Z = -10.0f;
 
 	infMap1Z = 0.0f;
-	infMap2Z = 0.0f;
+	infMap2Z = 100.0f;
 
 	m_ParticleShader = 0;
 	m_ParticleSystem = 0;
@@ -365,14 +365,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	CarPositionInitialize(0);
 	CarPositionInitialize(12);
 
-	for (int i = 12; i < 24; i++)
-	{
-		carObject[i].worldPosition.y += 100;
-		suvObject[i].worldPosition.y += 100;
-		truckObject[i].worldPosition.y += 100;
-		busObject[i].worldPosition.y += 100;
-	}
-
 	return true;
 }
 
@@ -434,7 +426,7 @@ void GraphicsClass::Shutdown()
 		m_floor2Model = 0;
 	}
 	
-	for each (auto object in carObject)
+	for (auto &object : carObject)
 	{
 		if (object.m_carModel)
 		{
@@ -444,7 +436,7 @@ void GraphicsClass::Shutdown()
 		}
 	}
 
-	for each (auto object in suvObject)
+	for (auto &object : suvObject)
 	{
 		if (object.m_carModel)
 		{
@@ -454,7 +446,7 @@ void GraphicsClass::Shutdown()
 		}
 	}
 
-	for each (auto object in truckObject)
+	for (auto &object : truckObject)
 	{
 		if (object.m_carModel)
 		{
@@ -464,7 +456,7 @@ void GraphicsClass::Shutdown()
 		}
 	}
 
-	for each (auto object in busObject)
+	for (auto &object : busObject)
 	{
 		if (object.m_carModel)
 		{
@@ -589,7 +581,7 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 
 void GraphicsClass::CarPositionInitialize(int carNum) {
 	//5, 10, 15, 30, 35, 40, 45, 55, 60, 75, 80, 85
-	carObject[0 + carNum].worldPosition.x = 0;
+	carObject[0 + carNum].worldPosition.x = -40;
 	carObject[0 + carNum].worldPosition.y = 5;
 	carObject[1 + carNum].worldPosition.x = 14;
 	carObject[1 + carNum].worldPosition.y = 15;
@@ -597,8 +589,8 @@ void GraphicsClass::CarPositionInitialize(int carNum) {
 	carObject[2 + carNum].worldPosition.y = 30;
 	carObject[3 + carNum].worldPosition.x = 6;
 	carObject[3 + carNum].worldPosition.y = 85;
-	carObject[4 + carNum].worldPosition.x = -10;
-	carObject[4 + carNum].worldPosition.y = 40;
+	carObject[4 + carNum].worldPosition.x = -40;
+	carObject[4 + carNum].worldPosition.y = 15;
 	carObject[5 + carNum].worldPosition.x = -8;
 	carObject[5 + carNum].worldPosition.y = 75;
 	carObject[6 + carNum].worldPosition.x = -38;
@@ -651,7 +643,7 @@ void GraphicsClass::CarPositionInitialize(int carNum) {
 	truckObject[3 + carNum].worldPosition.y = 75;
 	truckObject[4 + carNum].worldPosition.x = 12;
 	truckObject[4 + carNum].worldPosition.y = 5;
-	truckObject[5 + carNum].worldPosition.x = 24;
+	truckObject[5 + carNum].worldPosition.x = 38;
 	truckObject[5 + carNum].worldPosition.y = 15;
 	truckObject[6 + carNum].worldPosition.x = 30;
 	truckObject[6 + carNum].worldPosition.y = 10;
@@ -693,6 +685,36 @@ void GraphicsClass::CarPositionInitialize(int carNum) {
 	busObject[11 + carNum].worldPosition.y = 60;
 }
 
+void GraphicsClass::MoveCarForward(CarModelInfo &object) {
+	//5, 10, 15, 30, 35, 40, 45, 55, 60, 75, 80, 85
+	//  45, 75
+
+	if (object.worldPosition.x > 50) object.worldPosition.x = -50;
+	if (object.worldPosition.y == 5 ||
+		object.worldPosition.y == 35 ||
+		object.worldPosition.y == 60 ||
+		object.worldPosition.y == 80)
+	{
+		object.worldPosition.x += 0.08f;
+	}
+
+	else if (object.worldPosition.y == 10 ||
+		object.worldPosition.y == 30 ||
+		object.worldPosition.y == 40 ||
+		object.worldPosition.y == 55 ||
+		object.worldPosition.y == 85)
+	{
+		object.worldPosition.x += 0.05f;
+	}
+
+	else 
+	{
+		object.worldPosition.x += 0.03f;
+
+	}
+
+}
+
 bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
@@ -700,22 +722,45 @@ bool GraphicsClass::Render(float rotation)
 		particleMatrix, particleScaleMatrix;
 	bool result;
 
-
-	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.05f);
+	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1f);
 	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
 	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
 	D3DXMatrixTranslation(&particleMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
 	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
-	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z + 100);
+	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z);
 	D3DXMatrixScaling(&particleScaleMatrix, 10.0f, 10.0f, 10.0f);
-
-	for (int i = 0; i < maxCarNum; i++)
-	{
-		D3DXMatrixTranslation(&carObject[i].worldMatrix, carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y);
-		D3DXMatrixTranslation(&suvObject[i].worldMatrix, suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y);
-		D3DXMatrixTranslation(&truckObject[i].worldMatrix, truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y);
-		D3DXMatrixTranslation(&busObject[i].worldMatrix, busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y);
+	
+	for (auto &object : carObject) {
+		MoveCarForward(object);
 	}
+	for (auto& object : suvObject) {
+		MoveCarForward(object);
+	}
+	for (auto& object : truckObject) {
+		MoveCarForward(object);
+	}
+	for (auto& object : busObject) {
+		MoveCarForward(object);
+	}
+
+	for (int i = 0; i < maxCarNum / 2; i++)
+	{
+		D3DXMatrixTranslation(&carObject[i].worldMatrix, carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y + infMap1Z);
+		D3DXMatrixTranslation(&suvObject[i].worldMatrix, suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y + infMap1Z);
+		D3DXMatrixTranslation(&truckObject[i].worldMatrix, truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y + infMap1Z);
+		D3DXMatrixTranslation(&busObject[i].worldMatrix, busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y + infMap1Z);
+	}
+
+	for (int i = maxCarNum / 2; i < maxCarNum; i++)
+	{
+		D3DXMatrixTranslation(&carObject[i].worldMatrix, carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y + infMap2Z);
+		D3DXMatrixTranslation(&suvObject[i].worldMatrix, suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y + infMap2Z);
+		D3DXMatrixTranslation(&truckObject[i].worldMatrix, truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y + infMap2Z);
+		D3DXMatrixTranslation(&busObject[i].worldMatrix, busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y + infMap2Z);
+	}
+
+	if (m_SystemPlayerV.z - 120 > infMap1Z) infMap1Z += 200;
+	if (m_SystemPlayerV.z - 120 > infMap2Z) infMap2Z += 200;
 
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);

@@ -22,6 +22,8 @@
 #include "particleshaderclass.h"
 #include "particlesystemclass.h"
 
+#include <vector>
+
 /////////////
 // GLOBALS //
 /////////////
@@ -36,6 +38,16 @@ const int maxCarNum = 24;
 ////////////////////////////////////////////////////////////////////////////////
 class GraphicsClass
 {
+private:
+	struct CarModelInfo
+	{
+		ModelClass* m_carModel;
+		D3DXVECTOR2 worldPosition;
+		D3DXMATRIX worldMatrix;
+		D3DXVECTOR2 maxSize;
+		D3DXVECTOR2 minSize;
+	};
+
 public:
 	GraphicsClass();
 	GraphicsClass(const GraphicsClass&);
@@ -60,16 +72,9 @@ public:
 	bool Render(float);
 	bool CheckCubeIntersection(D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*);
 	void CarPositionInitialize(int);
+	void MoveCarForward(CarModelInfo&);
 
 private:
-	struct CarModelInfo
-	{
-		ModelClass* m_carModel;
-		D3DXVECTOR2 worldPosition;
-		D3DXMATRIX worldMatrix;
-		D3DXVECTOR2 maxSize;
-		D3DXVECTOR2 minSize;
-	};
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
