@@ -57,9 +57,11 @@ public:
 	float camera_Y;
 	float camera_Z;
 
+
 	D3DXVECTOR3 m_PlayerV;
 	D3DXVECTOR3 m_SystemPlayerV;
 	D3DXVECTOR3 m_PlayerRotation;
+	D3DXMATRIX UIViewMatrix;
 
 	float infMap1Z;
 	float infMap2Z;

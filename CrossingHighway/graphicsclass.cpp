@@ -23,14 +23,15 @@ GraphicsClass::GraphicsClass()
 	m_PlayerRotation = { 0.0f, 0.0f, 0.0f };
 
 	camera_X = 0.0f;
-	camera_Y = -2.0f;
-	camera_Z = -10.0f;
+	camera_Y = 0.0f;
+	camera_Z = 0.0f;
 
 	infMap1Z = 0.0f;
 	infMap2Z = 100.0f;
 
 	m_ParticleShader = 0;
 	m_ParticleSystem = 0;
+
 }
 
 
@@ -79,11 +80,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 40.0f, 00.0f);
 	m_Camera->SetRotation(60.0f, -15.0f, 0.0f);
-	//m_Camera->SetPosition(0.0f, 0.5f, -3.0f);
 
 		m_ParticleShader = new ParticleShaderClass;
 	if (!m_ParticleShader)
@@ -537,7 +535,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY)
 	return true;
 }
 
-bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
+bool GraphicsClass::Frame(int score, int cpu, float frameTime)
 {
 	bool result;
 	static float rotation = 0.0f;
@@ -552,18 +550,18 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 	}
 
 	// Set the frames per second.
-	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
+	result = m_Text->SetScore(score, m_D3D->GetDeviceContext());
 	if (!result)
 	{
 		return false;
 	}
-
-	// Set the cpu usage.
-	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
+	
+	//// Set the cpu usage.
+	//result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 	// Render the graphics scene.
 	result = Render(rotation);
@@ -574,7 +572,7 @@ bool GraphicsClass::Frame(int fps, int cpu, float frameTime)
 
 	// Set the position of the camera.
 
-	m_Camera->SetPosition(m_PlayerV.x + 5, m_PlayerV.y + 30, m_PlayerV.z - 10);
+	m_Camera->SetPosition(m_PlayerV.x+5, m_PlayerV.y +30, m_PlayerV.z - 10);
 
 	return true;
 }
@@ -719,7 +717,7 @@ bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
-		particleMatrix, particleScaleMatrix;
+		particleMatrix, particleScaleMatrix, BitmapMatrix;
 	bool result;
 
 	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1f);
@@ -770,12 +768,11 @@ bool GraphicsClass::Render(float rotation)
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
+	m_D3D->GetWorldMatrix(BitmapMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 
 	m_D3D->GetOrthoMatrix(orthoMatrix);
-
-	D3DXMatrixRotationY(&worldMatrix, rotation);
 	m_D3D->TurnOnAlphaBlending();
 
 	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
@@ -790,37 +787,6 @@ bool GraphicsClass::Render(float rotation)
 	m_D3D->TurnOffAlphaBlending();
 
 
-	// Turn off the Z buffer to begin all 2D rendering.
-	m_D3D->TurnZBufferOff();
-
-	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	//result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 200, 200);
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	// Render the bitmap with the texture shader.
-	//result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
-	//if (!result)
-	//{
-	//	return false;
-	//}
-	// Turn on the alpha blending before rendering the text.
-	m_D3D->TurnOnAlphaBlending();
-
-	// Render the text strings.
-	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
-	if (!result)
-	{
-		return false;
-	}
-		
-	// Turn off alpha blending after rendering the text.
-	m_D3D->TurnOffAlphaBlending();
-
-	// Turn the Z buffer back on now that all 2D rendering has completed.
-	m_D3D->TurnZBufferOn();
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 
@@ -920,6 +886,44 @@ bool GraphicsClass::Render(float rotation)
 			return false;
 		}
 	}
+
+	// Turn off the Z buffer to begin all 2D rendering.
+	m_D3D->TurnZBufferOff();
+	D3DXVECTOR3 cameraPosition = m_Camera->GetPosition();
+	D3DXVECTOR3 cameraRotation = m_Camera->GetRotation();
+
+	D3DXMatrixTranslation(&viewMatrix,0,0,cameraPosition.z+12);
+
+	D3DXMatrixRotationYawPitchRoll(&BitmapMatrix, cameraRotation.y * 0.0174532925f, cameraRotation.x * 0.0174532925f, cameraRotation.z );
+
+	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	//result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 0, 0);
+	//if (!result)
+	//{
+	//	return false;
+	//}
+	//
+	//// Render the bitmap with the texture shader.
+	//result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
+	//if (!result)
+	//{
+	//	return false;
+	//}
+	// Turn on the alpha blending before rendering the text.
+	m_D3D->TurnOnAlphaBlending();
+
+	// Render the text strings.
+	result = m_Text->Render(m_D3D->GetDeviceContext(), viewMatrix*BitmapMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Turn off alpha blending after rendering the text.
+	m_D3D->TurnOffAlphaBlending();
+
+	// Turn the Z buffer back on now that all 2D rendering has completed.
+	m_D3D->TurnZBufferOn();
 
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();

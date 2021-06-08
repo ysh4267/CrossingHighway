@@ -75,7 +75,7 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "Hello", 100, 100, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence1, "Score:", 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -89,7 +89,7 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "Goodbye", 100, 200, 1.0f, 1.0f, 0.0f, deviceContext);
+	result = UpdateSentence(m_sentence2, "", 55, 20, 1.0f, 1.0f, 0.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -413,6 +413,62 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY, ID3D11DeviceContext* de
 
 	// Update the sentence vertex buffer with the new string information.
 	result = UpdateSentence(m_sentence2, mouseString, 20, 40, 1.0f, 1.0f, 1.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool TextClass::SetScore(int score, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[16];
+	char fpsString[16];
+	float red, green, blue;
+	bool result;
+
+
+	// Truncate the fps to below 10,000.
+	if (score > 9999)
+	{
+		score = 9999;
+	}
+
+	// Convert the fps integer to string format.
+	_itoa_s(score, tempString, 10);
+
+	// Setup the fps string.
+	strcpy_s(fpsString, "Score: ");
+	strcat_s(fpsString, tempString);
+
+	// If fps is 60 or above set the fps color to green.
+	if (score >= 15)
+	{
+		red = 0.0f;
+		green = 1.0f;
+		blue = 0.0f;
+	}
+
+	// If fps is below 60 set the fps color to yellow.
+	if (score < 15)
+	{
+		red = 1.0f;
+		green = 1.0f;
+		blue = 0.0f;
+	}
+
+	// If fps is below 30 set the fps color to red.
+	if (score < 10)
+	{
+		red = 1.0f;
+		green = 0.0f;
+		blue = 0.0f;
+	}
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence1, fpsString, 375, 20, red, green, blue, deviceContext);
 	if (!result)
 	{
 		return false;

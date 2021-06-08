@@ -11,6 +11,7 @@ SystemClass::SystemClass()
 	m_Fps = 0;
 	m_Cpu = 0;
 	m_Timer = 0;
+	score = 0;
 }
 
 
@@ -215,10 +216,27 @@ bool SystemClass::Frame()
 	{
 		return false;
 	}
+	//if (m_Input->IsUpPressed()) {
+	//	m_Graphics->m_SystemPlayerV.z += 5.0f;
+	//	m_Graphics->m_PlayerRotation.y = 0.0f  *0.0174532925f;
+	//}
+	//if (m_Input->IsDownPressed()) {
+	//	m_Graphics->m_SystemPlayerV.z -= 5.0f;
+	//	m_Graphics->m_PlayerRotation.y = 180.0f * 0.0174532925f;
+	//}
+	//if (m_Input->IsLeftPressed() ) {
+	//	m_Graphics->m_SystemPlayerV.x -= 5.0f;
+	//	m_Graphics->m_PlayerRotation.y = 270.0f * 0.0174532925f;
 
+	//}
+	//if (m_Input->IsRightPressed() ) {
+	//	m_Graphics->m_SystemPlayerV.x += 5.0f;
+	//	m_Graphics->m_PlayerRotation.y = 90.0f * 0.0174532925f;
+	//}
 	if (m_Input->IsUpPressed() && ((float)m_Graphics->m_SystemPlayerV.z - m_Graphics->m_PlayerV.z) <= 0.1f) {
 		m_Graphics->m_SystemPlayerV.z += 5.0f;
 		m_Graphics->m_PlayerRotation.y = 0.0f * D3DX_PI / 180;
+		score++;
 	}
 	if (m_Input->IsDownPressed() && ((float)m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.1f) {
 		m_Graphics->m_SystemPlayerV.z -= 5.0f;
@@ -239,7 +257,7 @@ bool SystemClass::Frame()
 
 	// Do the frame processing for the graphics object.
 //	result = m_Graphics->Frame(mouseX, mouseY);
-	result = m_Graphics->Frame(m_Fps->GetFps(), m_Cpu->GetCpuPercentage(), m_Timer->GetTime());
+	result = m_Graphics->Frame(score, m_Cpu->GetCpuPercentage(), m_Timer->GetTime());
 	if (!result)
 	{
 		return false;
