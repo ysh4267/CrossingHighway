@@ -22,8 +22,6 @@
 #include "particleshaderclass.h"
 #include "particlesystemclass.h"
 
-#include <vector>
-
 /////////////
 // GLOBALS //
 /////////////
@@ -46,6 +44,8 @@ private:
 		D3DXMATRIX worldMatrix;
 		D3DXVECTOR2 maxSize;
 		D3DXVECTOR2 minSize;
+		D3DXVECTOR2 maxPosSize;
+		D3DXVECTOR2 minPosSize;
 	};
 
 public:
@@ -72,9 +72,10 @@ public:
 	bool Frame(int, int, float);
 	bool Render();
 	bool Render(float);
-	bool CheckCubeIntersection(D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*, D3DXVECTOR3*);
+	bool CheckCubeIntersection(D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*);
 	void CarPositionInitialize(int);
 	void MoveCarForward(CarModelInfo&);
+	bool IsCollision();
 
 private:
 	D3DClass* m_D3D;
