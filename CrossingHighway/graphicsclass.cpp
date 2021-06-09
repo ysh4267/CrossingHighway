@@ -18,6 +18,7 @@ GraphicsClass::GraphicsClass()
 
 	m_Text = 0;
 
+	m_BackPlayerV = { 0.0f, 0.0f, 0.0f };
 	m_SystemPlayerV = { 0.0f, 0.0f, 0.0f };
 	m_PlayerV = { 0.0f, 0.0f, 0.0f };
 	m_PlayerRotation = { 0.0f, 0.0f, 0.0f };
@@ -370,6 +371,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	CarPositionInitialize(0);
 	CarPositionInitialize(12);
+	WallPositionInitialize(wallObject1);
+	WallPositionInitialize(wallObject2);
 
 	return true;
 }
@@ -585,6 +588,46 @@ bool GraphicsClass::Frame(int score, int cpu, float frameTime)
 	return true;
 }
 
+void GraphicsClass::WallPositionInitialize(WallModelInfo * wallObject) {
+	wallObject[0].maxPosSize = { -22.5, 100 };
+	wallObject[0].minPosSize = { -52.5, 0 };
+	wallObject[1].maxPosSize = { 52.5, 100 };
+	wallObject[1].minPosSize = { 32.5, 0 };
+	wallObject[2].maxPosSize = { 0, 20 };
+	wallObject[3].maxPosSize = { 15, 20 };
+	wallObject[4].maxPosSize = { 20, 20 };
+	wallObject[5].maxPosSize = { 25, 20 };
+	wallObject[6].maxPosSize = { 5, 25 };
+	wallObject[7].maxPosSize = { 15, 25 };
+	wallObject[8].maxPosSize = { 20, 25 };
+	wallObject[9].maxPosSize = { 10, 50 };
+	wallObject[10].maxPosSize = { 15, 50 };
+	wallObject[11].maxPosSize = { -15, 50 };
+	wallObject[12].maxPosSize = { -20, 50 };
+	wallObject[13].maxPosSize = { 0, 65 };
+	wallObject[14].maxPosSize = { 15, 65 };
+	wallObject[15].maxPosSize = { 20, 65 };
+	wallObject[16].maxPosSize = { 25, 65 };
+	wallObject[17].maxPosSize = { -15, 65 };
+	wallObject[18].maxPosSize = { 5, 70 };
+	wallObject[19].maxPosSize = { 15, 70 };
+	wallObject[20].maxPosSize = { 20, 70 };
+	wallObject[21].maxPosSize = { -15, 70 };
+	wallObject[22].maxPosSize = { -20, 70 };
+	wallObject[23].maxPosSize = { 15, 90 };
+	wallObject[24].maxPosSize = { 20, 90 };
+	wallObject[25].maxPosSize = { 30, 90 };
+	wallObject[26].maxPosSize = { 25, 95 };
+	wallObject[27].maxPosSize = { 30, 95 };
+	wallObject[28].maxPosSize = { 30, 0 };
+
+	for (int i = 2; i < 29; i++)
+	{
+		wallObject[i].minPosSize = { wallObject[i].maxPosSize.x - 2.5f, wallObject[i].maxPosSize.y - 2.5f };
+		wallObject[i].maxPosSize = { wallObject[i].maxPosSize.x + 2.5f, wallObject[i].maxPosSize.y + 2.5f };
+	}
+}
+
 void GraphicsClass::CarPositionInitialize(int carNum) {
 	//5, 10, 15, 30, 35, 40, 45, 55, 60, 75, 80, 85
 	carObject[0 + carNum].worldPosition.x = -40;
@@ -705,10 +748,10 @@ void GraphicsClass::MoveCarForward(CarModelInfo &object) {
 	}
 
 	else if (object.worldPosition.y == 10 ||
-		object.worldPosition.y == 30 ||
-		object.worldPosition.y == 40 ||
-		object.worldPosition.y == 55 ||
-		object.worldPosition.y == 85)
+			object.worldPosition.y == 30 ||
+			object.worldPosition.y == 40 ||
+			object.worldPosition.y == 55 ||
+			object.worldPosition.y == 85)
 	{
 		object.worldPosition.x += 0.05f;
 	}
@@ -716,7 +759,6 @@ void GraphicsClass::MoveCarForward(CarModelInfo &object) {
 	else 
 	{
 		object.worldPosition.x += 0.03f;
-
 	}
 }
 
@@ -742,6 +784,18 @@ bool GraphicsClass::IsCollision() {
 	for (auto object : busObject) {
 		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
 			gameover = true;
+			return true;
+		}
+	}
+	for (auto object : wallObject1) {
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		{
+			return true;
+		}
+	}
+	for (auto object : wallObject2) {
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		{
 			return true;
 		}
 	}
@@ -808,15 +862,38 @@ bool GraphicsClass::Render(float rotation)
 		D3DXVec2Add(&busObject[i].minPosSize, new D3DXVECTOR2(busObject[i].minSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap2Z));
 	}
 
-	if (m_SystemPlayerV.z - 150 > infMap1Z) infMap1Z += 200;
-	if (m_SystemPlayerV.z - 150 > infMap2Z) infMap2Z += 200;
-	if (m_SystemPlayerV.z + 80 < infMap1Z) infMap1Z -= 200;
-	if (m_SystemPlayerV.z + 80 < infMap2Z) infMap2Z -= 200;
+	if (m_SystemPlayerV.z - 150 > infMap1Z) {
+		infMap1Z += 200;
+		for (auto& object : wallObject1) {
+			object.maxPosSize.y += infMap1Z;
+			object.minPosSize.y += infMap1Z;
+		}
+	}
+	if (m_SystemPlayerV.z - 150 > infMap2Z) { 
+		infMap2Z += 200; 
+		for (auto& object : wallObject2) {
+			object.maxPosSize.y += infMap2Z;
+			object.minPosSize.y += infMap2Z;
+		}
+	}
+	if (m_SystemPlayerV.z + 80 < infMap1Z) { 
+		infMap1Z -= 200; 
+		for (auto& object : wallObject1) {
+			object.maxPosSize.y += infMap1Z;
+			object.minPosSize.y += infMap1Z;
+		}
+	}
+	if (m_SystemPlayerV.z + 80 < infMap2Z) { 
+		infMap2Z -= 200; 
+		for (auto& object : wallObject2) {
+			object.maxPosSize.y += infMap2Z;
+			object.minPosSize.y += infMap2Z;
+		}
+	}
 
 	if (IsCollision())
 	{
-		m_SystemPlayerV.x = 0;
-		m_SystemPlayerV.z = 0;
+		m_SystemPlayerV = m_BackPlayerV;
 	}
 
 	// Clear the buffers to begin the scene.

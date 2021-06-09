@@ -48,6 +48,12 @@ private:
 		D3DXVECTOR2 minPosSize;
 	};
 
+	struct WallModelInfo
+	{
+		D3DXVECTOR2 maxPosSize;
+		D3DXVECTOR2 minPosSize;
+	};
+
 public:
 	GraphicsClass();
 	GraphicsClass(const GraphicsClass&);
@@ -60,6 +66,7 @@ public:
 
 	D3DXVECTOR3 m_PlayerV;
 	D3DXVECTOR3 m_SystemPlayerV;
+	D3DXVECTOR3 m_BackPlayerV;
 	D3DXVECTOR3 m_PlayerRotation;
 	D3DXMATRIX UIViewMatrix;
 
@@ -76,6 +83,7 @@ public:
 	bool Render(float);
 	bool CheckCubeIntersection(D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*);
 	void CarPositionInitialize(int);
+	void WallPositionInitialize(WallModelInfo* wallObject);
 	void MoveCarForward(CarModelInfo&);
 	bool IsCollision();
 
@@ -89,6 +97,8 @@ private:
 	CarModelInfo suvObject[maxCarNum];
 	CarModelInfo truckObject[maxCarNum];
 	CarModelInfo busObject[maxCarNum];
+	WallModelInfo wallObject1[29];
+	WallModelInfo wallObject2[29];
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
