@@ -66,6 +66,8 @@ public:
 	float infMap1Z;
 	float infMap2Z;
 
+	bool gameover;
+
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame(int, int);

@@ -31,7 +31,8 @@ GraphicsClass::GraphicsClass()
 
 	m_ParticleShader = 0;
 	m_ParticleSystem = 0;
-
+	
+	gameover = false;
 }
 
 
@@ -340,7 +341,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the bitmap object.
-	result = m_Bitmap->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, L"data/seafloor.dds", 256, 256);
+	result = m_Bitmap->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, L"data/gameover3.png", 600, 600);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
@@ -721,20 +722,28 @@ void GraphicsClass::MoveCarForward(CarModelInfo &object) {
 
 bool GraphicsClass::IsCollision() {
 	for (auto object : carObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+			gameover = true;
 			return true;
+		}
 	}
 	for (auto object : suvObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+			gameover = true;
 			return true;
+		}
 	}
 	for (auto object : truckObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+			gameover = true;
 			return true;
+		}
 	}
 	for (auto object : busObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+			gameover = true;
 			return true;
+		}
 	}
 	return false;
 }
@@ -743,7 +752,7 @@ bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
-		particleMatrix, particleScaleMatrix, BitmapMatrix;
+		particleMatrix, particleScaleMatrix, BitmapMatrix, offset;
 	bool result;
 
 	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1f);
@@ -820,6 +829,7 @@ bool GraphicsClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(BitmapMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
+	m_D3D->GetWorldMatrix(offset);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 
 	m_D3D->GetOrthoMatrix(orthoMatrix);
@@ -947,23 +957,31 @@ bool GraphicsClass::Render(float rotation)
 	D3DXMatrixRotationYawPitchRoll(&BitmapMatrix, cameraRotation.y * 0.0174532925f, cameraRotation.x * 0.0174532925f, cameraRotation.z );
 
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	//result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 0, 0);
-	//if (!result)
-	//{
-	//	return false;
-	//}
-	//
-	//// Render the bitmap with the texture shader.
-	//result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
-	//if (!result)
-	//{
-	//	return false;
-	//}
+	
 	// Turn on the alpha blending before rendering the text.
 	m_D3D->TurnOnAlphaBlending();
 
+	if (gameover) {
+		static float y = 200;
+		if (y >= 50.0f) {
+
+			y -= 1.5f;
+		}
+		result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 0, 0);
+		if (!result)
+		{
+			return false;
+		}
+		D3DXMatrixTranslation(&offset, 100, y, 0);
+		// Render the bitmap with the texture shader.
+		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix * offset, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+	}
 	// Render the text strings.
-	result = m_Text->Render(m_D3D->GetDeviceContext(), viewMatrix*BitmapMatrix, orthoMatrix);
+	result = m_Text->Render(m_D3D->GetDeviceContext(), viewMatrix * BitmapMatrix, orthoMatrix);
 	if (!result)
 	{
 		return false;
