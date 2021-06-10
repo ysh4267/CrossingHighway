@@ -117,7 +117,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-#pragma region ¸ðµ¨ ¼±¾ð
+#pragma region Model declaration
 
 	// Initialize the model object.
 	result = m_Model->Initialize(m_D3D->GetDevice(), "data/player.obj", L"data/playertexture.png");
@@ -287,7 +287,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		busObject[i].minSize = D3DXVECTOR2(-5.5f, -2.0f);
 	}
 
-#pragma endregion ¸ðµ¨ ¼±¾ð
+#pragma endregion Model declaration
 
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -593,6 +593,7 @@ bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 	return true;
 }
 
+#pragma region Model Position Initialize
 void GraphicsClass::WallPositionInitialize(WallModelInfo * wallObject) {
 	wallObject[0].maxPosSize = { -22.5, 100 };
 	wallObject[0].minPosSize = { -52.5, 0 };
@@ -810,6 +811,7 @@ bool GraphicsClass::IsCollision() {
 	}
 	return false;
 }
+#pragma endregion Model Position Initialize
 
 bool GraphicsClass::Render(float rotation)
 {
@@ -908,13 +910,88 @@ bool GraphicsClass::Render(float rotation)
 
 	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
 
-	// Render the model using the texture shader.
-	result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(),particleRotationMatrix* carObject[0].worldMatrix, viewMatrix, projectionMatrix,
-		m_ParticleSystem->GetTexture());
-	if (!result)
+#pragma region Particle Position
+	for (int i = 0; i < 12; i++)
 	{
-		return false;
+		D3DXMATRIX TempM;
+		D3DXMatrixTranslation(&TempM, carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap1Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+
+		D3DXMatrixTranslation(&TempM, suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap1Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+
+		D3DXMatrixTranslation(&TempM, truckObject[i].worldPosition.x - 2.7f, 0.0f, truckObject[i].worldPosition.y + 0.5f + infMap1Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+
+		D3DXMatrixTranslation(&TempM, busObject[i].worldPosition.x - 4.5f, 0.0f, busObject[i].worldPosition.y + 0.5f + infMap1Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
 	}
+
+	for (int i = 12; i < 24; i++)
+	{
+		D3DXMATRIX TempM;
+		D3DXMatrixTranslation(&TempM, carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap2Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+
+		D3DXMatrixTranslation(&TempM, suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap2Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+
+		D3DXMatrixTranslation(&TempM, truckObject[i].worldPosition.x - 3.0f, 0.0f, truckObject[i].worldPosition.y + 0.5f + infMap2Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+
+		D3DXMatrixTranslation(&TempM, busObject[i].worldPosition.x - 4.5f, 0.0f, busObject[i].worldPosition.y + 0.5f + infMap2Z);
+		// Render the model using the texture shader.
+		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
+			m_ParticleSystem->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
+	}
+#pragma endregion Particle Position
+
 	m_D3D->TurnOffAlphaBlending();
 
 
