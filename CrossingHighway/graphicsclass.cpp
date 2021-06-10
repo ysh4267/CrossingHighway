@@ -788,13 +788,17 @@ bool GraphicsClass::IsCollision() {
 		}
 	}
 	for (auto object : wallObject1) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		D3DXVECTOR2 maxV = { object.maxPosSize.x, object.maxPosSize.y + infMap1Z };
+		D3DXVECTOR2 minV = { object.minPosSize.x, object.minPosSize.y + infMap1Z };
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &minV, &maxV))
 		{
 			return true;
 		}
 	}
 	for (auto object : wallObject2) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize))
+		D3DXVECTOR2 maxV = { object.maxPosSize.x, object.maxPosSize.y + infMap2Z };
+		D3DXVECTOR2 minV = { object.minPosSize.x, object.minPosSize.y + infMap2Z };
+		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &minV, &maxV))
 		{
 			return true;
 		}
@@ -865,31 +869,15 @@ bool GraphicsClass::Render(float rotation)
 
 	if (m_SystemPlayerV.z - 150 > infMap1Z) {
 		infMap1Z += 200;
-		for (auto& object : wallObject1) {
-			object.maxPosSize.y += infMap1Z;
-			object.minPosSize.y += infMap1Z;
-		}
 	}
 	if (m_SystemPlayerV.z - 150 > infMap2Z) { 
 		infMap2Z += 200; 
-		for (auto& object : wallObject2) {
-			object.maxPosSize.y += infMap2Z;
-			object.minPosSize.y += infMap2Z;
-		}
 	}
 	if (m_SystemPlayerV.z + 80 < infMap1Z) { 
 		infMap1Z -= 200; 
-		for (auto& object : wallObject1) {
-			object.maxPosSize.y += infMap1Z;
-			object.minPosSize.y += infMap1Z;
-		}
 	}
 	if (m_SystemPlayerV.z + 80 < infMap2Z) { 
 		infMap2Z -= 200; 
-		for (auto& object : wallObject2) {
-			object.maxPosSize.y += infMap2Z;
-			object.minPosSize.y += infMap2Z;
-		}
 	}
 
 	if (IsCollision())
