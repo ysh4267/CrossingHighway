@@ -105,7 +105,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the particle system object.
-	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/star.dds");
+	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/dust.png");
 	if (!result)
 	{
 		return false;
