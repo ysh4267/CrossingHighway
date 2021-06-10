@@ -75,6 +75,7 @@ public:
 	int m_score;
 	int polyNum;
 	int objNum;
+	float accel;
 
 	bool gameover;
 

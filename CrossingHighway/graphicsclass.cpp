@@ -37,6 +37,7 @@ GraphicsClass::GraphicsClass()
 	
 	objNum = 0;
 	polyNum = 0;
+	accel = 0;
 
 	gameover = false;
 }
@@ -771,7 +772,7 @@ void GraphicsClass::MoveCarForward(CarModelInfo &object) {
 		object.worldPosition.y == 60 ||
 		object.worldPosition.y == 80)
 	{
-		object.worldPosition.x += 0.08f;
+		object.worldPosition.x += 0.08f + accel;
 	}
 
 	else if (object.worldPosition.y == 10 ||
@@ -780,12 +781,12 @@ void GraphicsClass::MoveCarForward(CarModelInfo &object) {
 			object.worldPosition.y == 55 ||
 			object.worldPosition.y == 85)
 	{
-		object.worldPosition.x += 0.05f;
+		object.worldPosition.x += 0.05f + accel;
 	}
 
 	else 
 	{
-		object.worldPosition.x += 0.03f;
+		object.worldPosition.x += 0.03f + accel;
 	}
 }
 
@@ -915,6 +916,19 @@ bool GraphicsClass::Render(float rotation)
 		m_SystemPlayerV = m_BackPlayerV;
 	}
 
+	if (accel == 0 && m_score > 16)
+	{
+		accel = 0.1f;
+	}
+	else if (accel == 0.1f && m_score > 31)
+	{
+		accel = 0.2f;
+	}
+	else if (accel == 0.2f && m_score > 46)
+	{
+		accel = 0.3f;
+	}
+
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -934,9 +948,10 @@ bool GraphicsClass::Render(float rotation)
 	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
 
 #pragma region Particle Position
-	for (int i = 0; i < 12; i++)
+	for (int i = 1; i < 12; i++)
 	{
 		D3DXMATRIX TempM;
+
 		D3DXMatrixTranslation(&TempM, carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap1Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
@@ -945,6 +960,11 @@ bool GraphicsClass::Render(float rotation)
 		{
 			return false;
 		}
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		D3DXMATRIX TempM;
 
 		D3DXMatrixTranslation(&TempM, suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap1Z);
 		// Render the model using the texture shader.
@@ -1060,7 +1080,22 @@ bool GraphicsClass::Render(float rotation)
 	tempPolyNum += m_floor2Model->GetIndexCount();
 
 	////////////////////////Car
-	for (int i = 0; i < maxCarNum; i++)
+	D3DXMATRIX TM;
+	D3DXMatrixRotationY(&TM, rotation);
+	carObject[0].m_carModel->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), carObject[0].m_carModel->GetIndexCount(), TM * carObject[0].worldMatrix, viewMatrix, projectionMatrix,
+		carObject[0].m_carModel->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+	tempObjNum++;
+	tempPolyNum += carObject[0].m_carModel->GetIndexCount();
+
+	for (int i = 1; i < maxCarNum; i++)
 	{
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		carObject[i].m_carModel->Render(m_D3D->GetDeviceContext());
