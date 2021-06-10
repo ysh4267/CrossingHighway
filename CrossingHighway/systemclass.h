@@ -43,7 +43,7 @@ public:
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
 	int score;
-
+	bool isPlayed;
 private:
 	bool Frame();
 	void InitializeWindows(int&, int&);

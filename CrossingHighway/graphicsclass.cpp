@@ -32,6 +32,8 @@ GraphicsClass::GraphicsClass()
 
 	m_ParticleShader = 0;
 	m_ParticleSystem = 0;
+
+	m_score = 0;
 	
 	gameover = false;
 }
@@ -543,6 +545,8 @@ bool GraphicsClass::Frame(int mouseX, int mouseY)
 		return false;
 	}
 
+	if (m_score * 5 < m_SystemPlayerV.z) m_score = m_SystemPlayerV.z / 5.0f;
+
 	return true;
 }
 
@@ -561,7 +565,7 @@ bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 	}
 
 	// Set the frames per second.
-	result = m_Text->SetScore(score, m_D3D->GetDeviceContext());
+	result = m_Text->SetScore(m_score, m_D3D->GetDeviceContext());
 	if (!result)
 	{
 		return false;

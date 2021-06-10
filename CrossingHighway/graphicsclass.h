@@ -63,7 +63,6 @@ public:
 	float camera_Y;
 	float camera_Z;
 
-
 	D3DXVECTOR3 m_PlayerV;
 	D3DXVECTOR3 m_SystemPlayerV;
 	D3DXVECTOR3 m_BackPlayerV;
@@ -72,6 +71,8 @@ public:
 
 	float infMap1Z;
 	float infMap2Z;
+
+	int m_score;
 
 	bool gameover;
 
