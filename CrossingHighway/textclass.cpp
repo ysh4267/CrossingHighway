@@ -680,8 +680,8 @@ bool TextClass::SetObjNum(int cpu, ID3D11DeviceContext* deviceContext)
 
 bool TextClass::SetPolyNum(int cpu, ID3D11DeviceContext* deviceContext)
 {
-	char tempString[16];
-	char cpuString[16];
+	char tempString[24];
+	char cpuString[24];
 	bool result;
 
 
