@@ -840,6 +840,8 @@ bool GraphicsClass::Render(float rotation)
 	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
 		particleMatrix,particleRotationMatrix,particleScaleMatrix, BitmapMatrix, offset;
 	bool result;
+	int tempObjNum = 0;
+	int tempPolyNum = 0;
 
 	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1f);
 	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
@@ -1015,13 +1017,10 @@ bool GraphicsClass::Render(float rotation)
 
 	m_D3D->TurnOffAlphaBlending();
 
-
-
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_D3D->GetDeviceContext());
-
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), PlayerRotationMatrix*PlayerWorldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
@@ -1030,10 +1029,11 @@ bool GraphicsClass::Render(float rotation)
 	{
 		return false;
 	}
-	
+	tempObjNum++;
+	tempPolyNum += m_Model->GetIndexCount();
+
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_floor1Model->Render(m_D3D->GetDeviceContext());
-
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor1Model->GetIndexCount(), floor1WorldMatrix, viewMatrix, projectionMatrix,
 		m_floor1Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
@@ -1042,10 +1042,12 @@ bool GraphicsClass::Render(float rotation)
 	{
 		return false;
 	}
+	tempObjNum++;
+	tempPolyNum += m_floor1Model->GetIndexCount();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_floor2Model->Render(m_D3D->GetDeviceContext());
-
+	tempObjNum++;
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_floor2Model->GetIndexCount(), floor2WorldMatrix, viewMatrix, projectionMatrix,
 		m_floor2Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
@@ -1054,6 +1056,8 @@ bool GraphicsClass::Render(float rotation)
 	{
 		return false;
 	}
+	tempObjNum++;
+	tempPolyNum += m_floor2Model->GetIndexCount();
 
 	////////////////////////Car
 	for (int i = 0; i < maxCarNum; i++)
@@ -1069,6 +1073,9 @@ bool GraphicsClass::Render(float rotation)
 		{
 			return false;
 		}
+		tempObjNum++;
+		tempPolyNum += carObject[i].m_carModel->GetIndexCount();
+
 	}
 	////////////////////////Suv
 	for (int i = 0; i < maxCarNum; i++)
@@ -1084,6 +1091,8 @@ bool GraphicsClass::Render(float rotation)
 		{
 			return false;
 		}
+		tempObjNum++;
+		tempPolyNum += suvObject[i].m_carModel->GetIndexCount();
 	}
 	////////////////////////Truck
 	for (int i = 0; i < maxCarNum; i++)
@@ -1099,6 +1108,8 @@ bool GraphicsClass::Render(float rotation)
 		{
 			return false;
 		}
+		tempObjNum++;
+		tempPolyNum += truckObject[i].m_carModel->GetIndexCount();
 	}
 	////////////////////////Bus
 	for (int i = 0; i < maxCarNum; i++)
@@ -1114,7 +1125,12 @@ bool GraphicsClass::Render(float rotation)
 		{
 			return false;
 		}
+		tempObjNum++;
+		tempPolyNum += busObject[i].m_carModel->GetIndexCount();
 	}
+
+	objNum = tempObjNum;
+	polyNum = tempPolyNum;
 
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
