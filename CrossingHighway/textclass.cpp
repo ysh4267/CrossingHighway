@@ -717,7 +717,7 @@ bool TextClass::SetScreenSize(int screenSize, ID3D11DeviceContext* deviceContext
 	_itoa_s(m_screenWidth, tempString, 10);
 	strcat_s(tempString, "x");
 	_itoa_s(m_screenHeight, tempString2, 10);
-	strcat_s(tempString, tempString2s);
+	strcat_s(tempString, tempString2);
 	// Setup the cpu string.
 	strcpy_s(cpuString, "Screen: ");
 	strcat_s(cpuString, tempString);
