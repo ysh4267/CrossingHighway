@@ -42,7 +42,7 @@ bool SoundClass::Initialize(HWND hwnd)
 	{
 		return false;
 	}
-	result = LoadWaveFile("data/bgm.wav", &m_secondaryBuffer2);
+	result = LoadWaveFile("data/bgm02.wav", &m_secondaryBuffer2);
 	if (!result)
 	{
 		return false;
@@ -371,7 +371,7 @@ bool SoundClass::PlayBgm() {
 	}
 
 	// Set volume of the buffer to 100%.
-	result = m_secondaryBuffer2->SetVolume(DSBVOLUME_MAX);
+	result = m_secondaryBuffer2->SetVolume(-1000);
 	if (FAILED(result))
 	{
 		return false;
@@ -379,6 +379,19 @@ bool SoundClass::PlayBgm() {
 
 	// Play the contents of the secondary sound buffer.
 	result = m_secondaryBuffer2->Play(0, 0, 0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool SoundClass::StopBgm(){
+
+	HRESULT result;
+
+	result = m_secondaryBuffer2->Stop();
 	if (FAILED(result))
 	{
 		return false;
@@ -399,7 +412,7 @@ bool SoundClass::PlayGameOver() {
 	}
 
 	// Set volume of the buffer to 100%.
-	result = m_secondaryBuffer3->SetVolume(DSBVOLUME_MAX);
+	result = m_secondaryBuffer3->SetVolume(-1000);
 	if (FAILED(result))
 	{
 		return false;
@@ -427,7 +440,7 @@ bool SoundClass::PlayJumpSound()
 	}
 
 	// Set volume of the buffer to 100%.
-	result = m_secondaryBuffer1->SetVolume(-500);
+	result = m_secondaryBuffer1->SetVolume(-2000);
 	if(FAILED(result))
 	{
 		return false;

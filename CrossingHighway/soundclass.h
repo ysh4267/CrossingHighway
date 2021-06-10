@@ -50,6 +50,7 @@ public:
 	SoundClass(const SoundClass&);
 	~SoundClass();
 	bool PlayBgm();
+	bool StopBgm();
 	bool PlayGameOver();
 	bool PlayJumpSound();
 	bool Initialize(HWND);

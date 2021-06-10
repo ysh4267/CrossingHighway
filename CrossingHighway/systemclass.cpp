@@ -305,7 +305,10 @@ bool SystemClass::Frame()
 //	{
 //		return false;
 //	}
-
+	if (m_Graphics->IsCollision()&&m_Graphics->gameover==true) {
+		m_Sound->StopBgm();
+		m_Sound->PlayGameOver();
+	}
 	return true;
 }
 
