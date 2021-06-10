@@ -258,14 +258,14 @@ bool SystemClass::Frame()
 	//	m_Graphics->m_SystemPlayerV.x += 5.0f;
 	//	m_Graphics->m_PlayerRotation.y = 90.0f * 0.0174532925f;
 	//}
-	if (m_Input->IsUpPressed() && ((float)m_Graphics->m_SystemPlayerV.z - m_Graphics->m_PlayerV.z) <= 0.1f) {
+	if (m_Input->IsUpPressed() && ((float)m_Graphics->m_SystemPlayerV.z - m_Graphics->m_PlayerV.z) <= 0.2f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.z += 5.0f;
 		m_Graphics->m_PlayerRotation.y = 0.0f * D3DX_PI / 180;
 		score++;
 		m_Sound->PlayJumpSound();
 	}
-	if (m_Input->IsDownPressed() && ((float)m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.1f) {
+	if (m_Input->IsDownPressed() && ((float)m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.2f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.z -= 5.0f;
 		m_Graphics->m_PlayerRotation.y = 180.0f * D3DX_PI / 180;
