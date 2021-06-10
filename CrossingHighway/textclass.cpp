@@ -11,6 +11,7 @@ TextClass::TextClass()
 
 	m_sentence1 = 0;
 	m_sentence2 = 0;
+	m_sentence3 = 0;
 }
 
 
@@ -75,7 +76,7 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "Score:", 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence1, "Fps:", 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -89,8 +90,22 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "", 55, 20, 1.0f, 1.0f, 0.0f, deviceContext);
+	result = UpdateSentence(m_sentence2, "Cpu:", 55, 20, 1.0f, 1.0f, 0.0f, deviceContext);
 	if(!result)
+	{
+		return false;
+	}
+
+	// Initialize the first sentence.
+	result = InitializeSentence(&m_sentence3, 16, device);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence3, "Score:", 55, 20, 1.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
 	{
 		return false;
 	}
@@ -106,6 +121,9 @@ void TextClass::Shutdown()
 
 	// Release the second sentence.
 	ReleaseSentence(&m_sentence2);
+
+	// Release the second sentence.
+	ReleaseSentence(&m_sentence3);
 
 	// Release the font shader object.
 	if(m_FontShader)
@@ -142,6 +160,12 @@ bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatri
 	// Draw the second sentence.
 	result = RenderSentence(deviceContext, m_sentence2, worldMatrix, orthoMatrix);
 	if(!result)
+	{
+		return false;
+	}
+	// Draw the second sentence.
+	result = RenderSentence(deviceContext, m_sentence3, worldMatrix, orthoMatrix);
+	if (!result)
 	{
 		return false;
 	}
@@ -468,7 +492,7 @@ bool TextClass::SetScore(int score, ID3D11DeviceContext* deviceContext)
 	}
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, fpsString, 375, 200, red, green, blue, deviceContext);
+	result = UpdateSentence(m_sentence3, fpsString, 375, 20, red, green, blue, deviceContext);
 	if (!result)
 	{
 		return false;
