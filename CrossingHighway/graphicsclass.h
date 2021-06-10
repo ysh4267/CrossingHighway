@@ -73,6 +73,8 @@ public:
 	float infMap2Z;
 
 	int m_score;
+	int polyNum;
+	int objNum;
 
 	bool gameover;
 

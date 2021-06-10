@@ -42,6 +42,9 @@ public:
 	bool SetFps(int, ID3D11DeviceContext*);
 	bool SetCpu(int, ID3D11DeviceContext*);
 	bool SetScore(int, ID3D11DeviceContext*);
+	bool SetObjNum(int, ID3D11DeviceContext*);
+	bool SetPolyNum(int, ID3D11DeviceContext*);
+	bool SetScreenSize(int, ID3D11DeviceContext*);
 private:
 	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
 	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float, ID3D11DeviceContext*);
@@ -56,6 +59,9 @@ private:
 	SentenceType* m_sentence1;
 	SentenceType* m_sentence2;
 	SentenceType* m_sentence3;
+	SentenceType* m_sentence4;
+	SentenceType* m_sentence5;
+	SentenceType* m_sentence6;
 };
 
 #endif

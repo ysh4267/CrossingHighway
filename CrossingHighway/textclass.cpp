@@ -12,6 +12,9 @@ TextClass::TextClass()
 	m_sentence1 = 0;
 	m_sentence2 = 0;
 	m_sentence3 = 0;
+	m_sentence4 = 0;
+	m_sentence5 = 0;
+	m_sentence6 = 0;
 }
 
 
@@ -110,6 +113,47 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 		return false;
 	}
 
+	// Initialize the first sentence.
+	result = InitializeSentence(&m_sentence4, 16, device);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence4, "Score:", 90, 20, 1.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+	// Initialize the first sentence.
+	result = InitializeSentence(&m_sentence5, 16, device);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence5, "Score:", 125, 20, 1.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Initialize the first sentence.
+	result = InitializeSentence(&m_sentence6, 16, device);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence6, "Score:", 125, 20, 1.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -125,6 +169,13 @@ void TextClass::Shutdown()
 	// Release the second sentence.
 	ReleaseSentence(&m_sentence3);
 
+	// Release the second sentence.
+	ReleaseSentence(&m_sentence4);
+
+	// Release the second sentence.
+	ReleaseSentence(&m_sentence5);
+	// Release the second sentence.
+	ReleaseSentence(&m_sentence6);
 	// Release the font shader object.
 	if(m_FontShader)
 	{
@@ -165,6 +216,24 @@ bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatri
 	}
 	// Draw the second sentence.
 	result = RenderSentence(deviceContext, m_sentence3, worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+	// Draw the second sentence.
+	result = RenderSentence(deviceContext, m_sentence4, worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+	// Draw the second sentence.
+	result = RenderSentence(deviceContext, m_sentence5, worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+	// Draw the second sentence.
+	result = RenderSentence(deviceContext, m_sentence6, worldMatrix, orthoMatrix);
 	if (!result)
 	{
 		return false;
@@ -573,6 +642,89 @@ bool TextClass::SetCpu(int cpu, ID3D11DeviceContext* deviceContext)
 
 	// Update the sentence vertex buffer with the new string information.
 	result = UpdateSentence(m_sentence2, cpuString, 20, 40, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+
+bool TextClass::SetObjNum(int cpu, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[16];
+	char cpuString[16];
+	bool result;
+
+
+	// Convert the cpu integer to string format.
+	_itoa_s(cpu, tempString, 10);
+
+	// Setup the cpu string.
+	strcpy_s(cpuString, "Obj Num:");
+	strcat_s(cpuString, tempString);
+
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence4, cpuString, 20, 60, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool TextClass::SetPolyNum(int cpu, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[16];
+	char cpuString[16];
+	bool result;
+
+
+	// Convert the cpu integer to string format.
+	_itoa_s(cpu, tempString, 10);
+
+	// Setup the cpu string.
+	strcpy_s(cpuString, "Poly Num: ");
+	strcat_s(cpuString, tempString);
+
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence5, cpuString, 20, 80, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool TextClass::SetScreenSize(int screenSize, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[16];
+
+	char tempString2[16];
+	char cpuString[16];
+	bool result;
+
+
+	// Convert the cpu integer to string format.
+	_itoa_s(m_screenWidth, tempString, 10);
+	strcat_s(tempString, "x");
+	_itoa_s(m_screenHeight, tempString2, 10);
+	strcat_s(tempString, tempString2s);
+	// Setup the cpu string.
+	strcpy_s(cpuString, "Screen: ");
+	strcat_s(cpuString, tempString);
+
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence6, cpuString, 20, 100, 0.0f, 1.0f, 0.0f, deviceContext);
 	if (!result)
 	{
 		return false;

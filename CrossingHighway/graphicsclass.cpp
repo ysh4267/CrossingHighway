@@ -35,6 +35,9 @@ GraphicsClass::GraphicsClass()
 
 	m_score = 0;
 	
+	objNum = 0;
+	polyNum = 0;
+
 	gameover = false;
 }
 
@@ -582,7 +585,21 @@ bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 	{
 		return false;
 	}
-
+	result = m_Text->SetPolyNum(polyNum, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+	result = m_Text->SetObjNum(objNum, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+	result = m_Text->SetScreenSize(objNum, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
 	// Render the graphics scene.
 	result = Render(rotation);
 	if (!result)
@@ -859,7 +876,7 @@ bool GraphicsClass::Render(float rotation)
 		D3DXVec2Add(&truckObject[i].maxPosSize, new D3DXVECTOR2(truckObject[i].maxSize), new D3DXVECTOR2(truckObject[i].worldPosition.x, truckObject[i].worldPosition.y + infMap1Z));
 		D3DXVec2Add(&truckObject[i].minPosSize, new D3DXVECTOR2(truckObject[i].minSize), new D3DXVECTOR2(truckObject[i].worldPosition.x, truckObject[i].worldPosition.y + infMap1Z));
 		D3DXVec2Add(&busObject[i].maxPosSize, new D3DXVECTOR2(busObject[i].maxSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&busObject[i].minPosSize, new D3DXVECTOR2(busObject[i].minSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap1Z));
+		D3DXVec2Add(&busObject[i].minPosSize, new D3DXVECTOR2(busObject[i].minSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap1Z)); 
 	}
 
 	for (int i = maxCarNum / 2; i < maxCarNum; i++)
