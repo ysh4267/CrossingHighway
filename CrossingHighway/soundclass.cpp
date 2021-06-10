@@ -427,7 +427,7 @@ bool SoundClass::PlayJumpSound()
 	}
 
 	// Set volume of the buffer to 100%.
-	result = m_secondaryBuffer1->SetVolume(DSBVOLUME_MAX);
+	result = m_secondaryBuffer1->SetVolume(-500);
 	if(FAILED(result))
 	{
 		return false;

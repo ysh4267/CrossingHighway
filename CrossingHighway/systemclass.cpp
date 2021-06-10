@@ -272,7 +272,6 @@ bool SystemClass::Frame()
 		m_Graphics->m_SystemPlayerV.z -= 5.0f;
 		m_Graphics->m_PlayerRotation.y = 180.0f * D3DX_PI / 180;
 		m_Sound->PlayJumpSound();
-		m_Sound->PlayGameOver();
 	}
 	if (m_Input->IsLeftPressed() && ((float)m_Graphics->m_PlayerV.x - m_Graphics->m_SystemPlayerV.x) <= 0.1f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
@@ -286,6 +285,7 @@ bool SystemClass::Frame()
 		m_Graphics->m_PlayerRotation.y = 90.0f * D3DX_PI / 180;
 		m_Sound->PlayJumpSound();
 	}
+
 
 	// Get the location of the mouse from the input object,
 //	m_Input->GetMouseLocation(mouseX, mouseY);
