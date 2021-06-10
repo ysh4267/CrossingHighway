@@ -545,7 +545,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY)
 		return false;
 	}
 
-	if (m_score * 5 < m_SystemPlayerV.z) m_score = m_SystemPlayerV.z / 5.0f;
+
 
 	return true;
 }
@@ -593,7 +593,7 @@ bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 	// Set the position of the camera.
 
 	m_Camera->SetPosition(m_PlayerV.x+5, m_PlayerV.y +30, m_PlayerV.z - 10);
-
+	if (m_score * 5 < m_SystemPlayerV.z) m_score = m_SystemPlayerV.z / 5.0f;
 	return true;
 }
 
@@ -1104,7 +1104,7 @@ bool GraphicsClass::Render(float rotation)
 	D3DXVECTOR3 cameraPosition = m_Camera->GetPosition();
 	D3DXVECTOR3 cameraRotation = m_Camera->GetRotation();
 
-	D3DXMatrixTranslation(&viewMatrix,0,0,cameraPosition.z+12);
+	D3DXMatrixTranslation(&viewMatrix,0,0,cameraPosition.z+30);
 
 	D3DXMatrixRotationYawPitchRoll(&BitmapMatrix, cameraRotation.y * 0.0174532925f, cameraRotation.x * 0.0174532925f, cameraRotation.z );
 
