@@ -119,6 +119,8 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	isPlayed = false;
+
 	return true;
 }
 
@@ -305,9 +307,11 @@ bool SystemClass::Frame()
 //	{
 //		return false;
 //	}
-	if (m_Graphics->IsCollision()&&m_Graphics->gameover==true) {
+	
+	if (m_Graphics->IsCollision()&&m_Graphics->gameover==true && !isPlayed) {
 		m_Sound->StopBgm();
 		m_Sound->PlayGameOver();
+		isPlayed = true;
 	}
 	return true;
 }
