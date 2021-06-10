@@ -44,6 +44,10 @@ public:
 
 	int score;
 	bool isPlayed;
+	bool isBgmPlayed1;
+	bool isBgmPlayed2;
+	bool isBgmPlayed3;
+	bool isBgmPlayed4;
 private:
 	bool Frame();
 	void InitializeWindows(int&, int&);

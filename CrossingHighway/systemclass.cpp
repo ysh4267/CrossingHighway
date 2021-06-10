@@ -13,6 +13,10 @@ SystemClass::SystemClass()
 	m_Timer = 0;
 	m_Sound = 0;
 	score = 0;
+	isBgmPlayed1 = false;
+	isBgmPlayed2 = false;
+	isBgmPlayed3 = false;
+	isBgmPlayed4 = false;
 }
 
 
@@ -77,14 +81,6 @@ bool SystemClass::Initialize()
 		MessageBox(m_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
 		return false;
 	}
-	//m_Sound2 = new SoundClass;
-	//if (!m_Sound2) { return false; }
-	//// Initialize the sound object.
-	//result = m_Sound2->Initialize2(m_hwnd);
-	//if (!result) {
-	//	MessageBox(m_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
-	//	return false;
-	//}
 
 	// Create the fps object.
 	m_Fps = new FpsClass;
@@ -307,12 +303,35 @@ bool SystemClass::Frame()
 //	{
 //		return false;
 //	}
+
+
 	
 	if (m_Graphics->IsCollision()&&m_Graphics->gameover==true && !isPlayed) {
 		m_Sound->StopBgm();
 		m_Sound->PlayGameOver();
 		isPlayed = true;
 	}
+
+	if(m_Graphics->m_score > 15 && isBgmPlayed1 == false){
+		m_Sound->StopBgm();
+		m_Sound->PlayBgm2();
+		isBgmPlayed1 = true;
+	}
+	if (m_Graphics->m_score > 30 && isBgmPlayed2 == false) {
+		m_Sound->StopBgm();
+		m_Sound->PlayBgm3();
+		isBgmPlayed2 = true;
+	}
+	if (m_Graphics->m_score > 45 && isBgmPlayed3 == false) {
+		m_Sound->StopBgm();
+		m_Sound->PlayBgm4();
+		isBgmPlayed3 = true;
+	}
+
+
+
+
+
 	return true;
 }
 

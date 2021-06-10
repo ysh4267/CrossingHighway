@@ -11,6 +11,9 @@ SoundClass::SoundClass()
 	m_secondaryBuffer1 = 0;
 	m_secondaryBuffer2 = 0;
 	m_secondaryBuffer3 = 0;
+	m_secondaryBuffer4 = 0;
+	m_secondaryBuffer5 = 0;
+	m_secondaryBuffer6 = 0;
 }
 
 
@@ -52,43 +55,27 @@ bool SoundClass::Initialize(HWND hwnd)
 	{
 		return false;
 	}
-	// Play the wave file now that it has been loaded.
-	result = PlayBgm();
+	result = LoadWaveFile("data/bgm03.wav", &m_secondaryBuffer4);
+	if (!result)
+	{
+		return false;
+	}
+	result = LoadWaveFile("data/bgm04.wav", &m_secondaryBuffer5);
+	if (!result)
+	{
+		return false;
+	}
+	result = LoadWaveFile("data/bgm05.wav", &m_secondaryBuffer6);
+	if (!result)
+	{
+		return false;
+	}
+
 	if(!result)
 	{
 		return false;
 	}
-
-	return true;
-}
-
-
-bool SoundClass::Initialize2(HWND hwnd)
-{
-	bool result;
-
-
-	// Initialize direct sound and the primary sound buffer.
-	result = InitializeDirectSound(hwnd);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Load a wave audio file onto a secondary buffer.
-	result = LoadWaveFile("data/bgm.wav", &m_secondaryBuffer2);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Play the wave file now that it has been loaded.
-	result = PlayBgm();
-	if (!result)
-	{
-		return false;
-	}
-
+	PlayBgm1();
 	return true;
 }
 
@@ -97,6 +84,11 @@ void SoundClass::Shutdown()
 {
 	// Release the secondary buffer.
 	ShutdownWaveFile(&m_secondaryBuffer1);
+	ShutdownWaveFile(&m_secondaryBuffer2);
+	ShutdownWaveFile(&m_secondaryBuffer3);
+	ShutdownWaveFile(&m_secondaryBuffer4);
+	ShutdownWaveFile(&m_secondaryBuffer5);
+	ShutdownWaveFile(&m_secondaryBuffer6);
 
 	// Shutdown the Direct Sound API.
 	ShutdownDirectSound();
@@ -358,12 +350,8 @@ void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** secondaryBuffer)
 
 	return;
 }
-
-bool SoundClass::PlayBgm() {
+bool SoundClass::PlayBgm1() {
 	HRESULT result;
-
-
-	// Set position at the beginning of the sound buffer.
 	result = m_secondaryBuffer2->SetCurrentPosition(0);
 	if (FAILED(result))
 	{
@@ -383,9 +371,185 @@ bool SoundClass::PlayBgm() {
 	{
 		return false;
 	}
+	return true;
+}
+bool SoundClass::PlayBgm2() {
+	HRESULT result;
+	result = m_secondaryBuffer4->SetCurrentPosition(0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Set volume of the buffer to 100%.
+	result = m_secondaryBuffer4->SetVolume(-1000);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Play the contents of the secondary sound buffer.
+	result = m_secondaryBuffer4->Play(0, 0, 0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	return true;
+}
+bool SoundClass::PlayBgm3() {
+	HRESULT result;
+	result = m_secondaryBuffer5->SetCurrentPosition(0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Set volume of the buffer to 100%.
+	result = m_secondaryBuffer5->SetVolume(-1000);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Play the contents of the secondary sound buffer.
+	result = m_secondaryBuffer5->Play(0, 0, 0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	return true;
+}
+bool SoundClass::PlayBgm4() {
+	HRESULT result;
+	result = m_secondaryBuffer6->SetCurrentPosition(0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Set volume of the buffer to 100%.
+	result = m_secondaryBuffer6->SetVolume(-1000);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Play the contents of the secondary sound buffer.
+	result = m_secondaryBuffer6->Play(0, 0, 0);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	return true;
+}
+bool SoundClass::PlayBgm(int level) {
+	HRESULT result;
+
+	if (level == 1) {
+		// Set position at the beginning of the sound buffer.
+		result = m_secondaryBuffer2->SetCurrentPosition(0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Set volume of the buffer to 100%.
+		result = m_secondaryBuffer2->SetVolume(-1000);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Play the contents of the secondary sound buffer.
+		result = m_secondaryBuffer2->Play(0, 0, 0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+	if (level == 2) {
+		result = m_secondaryBuffer2->Stop();
+		if (FAILED(result))
+		{
+			return false;
+		}
+		result = m_secondaryBuffer4->SetCurrentPosition(0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Set volume of the buffer to 100%.
+		result = m_secondaryBuffer4->SetVolume(-1000);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Play the contents of the secondary sound buffer.
+		result = m_secondaryBuffer4->Play(0, 0, 0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+	if (level == 3) {
+		result = m_secondaryBuffer4->Stop();
+		if (FAILED(result))
+		{
+			return false;
+		}
+		result = m_secondaryBuffer5->SetCurrentPosition(0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Set volume of the buffer to 100%.
+		result = m_secondaryBuffer5->SetVolume(-1000);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Play the contents of the secondary sound buffer.
+		result = m_secondaryBuffer5->Play(0, 0, 0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+	if (level == 4) {
+		result = m_secondaryBuffer5->Stop();
+		if (FAILED(result))
+		{
+			return false;
+		}
+		result = m_secondaryBuffer6->SetCurrentPosition(0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Set volume of the buffer to 100%.
+		result = m_secondaryBuffer6->SetVolume(-1000);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Play the contents of the secondary sound buffer.
+		result = m_secondaryBuffer6->Play(0, 0, 0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+
 
 	return true;
 }
+
 
 bool SoundClass::StopBgm(){
 
@@ -396,7 +560,21 @@ bool SoundClass::StopBgm(){
 	{
 		return false;
 	}
-
+	result = m_secondaryBuffer4->Stop();
+	if (FAILED(result))
+	{
+		return false;
+	}
+	result = m_secondaryBuffer5->Stop();
+	if (FAILED(result))
+	{
+		return false;
+	}
+	result = m_secondaryBuffer6->Stop();
+	if (FAILED(result))
+	{
+		return false;
+	}
 	return true;
 }
 

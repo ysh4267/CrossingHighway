@@ -545,7 +545,7 @@ bool TextClass::SetScore(int score, ID3D11DeviceContext* deviceContext)
 	}
 
 	// If fps is below 60 set the fps color to yellow.
-	if (score < 15)
+	if (score < 30)
 	{
 		red = 1.0f;
 		green = 1.0f;
@@ -553,7 +553,7 @@ bool TextClass::SetScore(int score, ID3D11DeviceContext* deviceContext)
 	}
 
 	// If fps is below 30 set the fps color to red.
-	if (score < 10)
+	if (score < 45)
 	{
 		red = 1.0f;
 		green = 0.0f;

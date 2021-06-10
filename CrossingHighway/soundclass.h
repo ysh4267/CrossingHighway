@@ -49,12 +49,16 @@ public:
 	SoundClass();
 	SoundClass(const SoundClass&);
 	~SoundClass();
-	bool PlayBgm();
+	bool PlayBgm1();
+	bool PlayBgm2();
+	bool PlayBgm3();
+	bool PlayBgm4();
+	bool PlayBgm(int);
 	bool StopBgm();
+	bool ChangeBgm(int);
 	bool PlayGameOver();
 	bool PlayJumpSound();
 	bool Initialize(HWND);
-	bool Initialize2(HWND);
 	void Shutdown();
 
 private:
@@ -72,6 +76,9 @@ private:
 	IDirectSoundBuffer8* m_secondaryBuffer1;
 	IDirectSoundBuffer8* m_secondaryBuffer2;
 	IDirectSoundBuffer8* m_secondaryBuffer3;
+	IDirectSoundBuffer8* m_secondaryBuffer4;
+	IDirectSoundBuffer8* m_secondaryBuffer5;
+	IDirectSoundBuffer8* m_secondaryBuffer6;
 };
 
 #endif
