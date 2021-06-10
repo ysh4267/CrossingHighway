@@ -78,7 +78,7 @@ public:
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame(int, int);
-	bool Frame(int, int, float);
+	bool Frame(int,int, int, float);
 	bool Render();
 	bool Render(float);
 	bool CheckCubeIntersection(D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*);

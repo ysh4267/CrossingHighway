@@ -292,7 +292,7 @@ bool SystemClass::Frame()
 
 	// Do the frame processing for the graphics object.
 //	result = m_Graphics->Frame(mouseX, mouseY);
-	result = m_Graphics->Frame(score, m_Cpu->GetCpuPercentage(), m_Timer->GetTime());
+	result = m_Graphics->Frame(score,m_Fps->GetFps(), m_Cpu->GetCpuPercentage(), m_Timer->GetTime());
 	if (!result)
 	{
 		return false;

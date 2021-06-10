@@ -105,7 +105,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the particle system object.
-	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/dust.png");
+	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/star.dds");
 	if (!result)
 	{
 		return false;
@@ -546,7 +546,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY)
 	return true;
 }
 
-bool GraphicsClass::Frame(int score, int cpu, float frameTime)
+bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 {
 	bool result;
 	static float rotation = 0.0f;
@@ -566,13 +566,18 @@ bool GraphicsClass::Frame(int score, int cpu, float frameTime)
 	{
 		return false;
 	}
-	
-	//// Set the cpu usage.
-	//result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
-	//if (!result)
-	//{
-	//	return false;
-	//}
+	// Set the cpu usage.
+	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+	// Set the cpu usage.
+	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
 
 	// Render the graphics scene.
 	result = Render(rotation);
