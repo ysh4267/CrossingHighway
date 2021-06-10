@@ -11,6 +11,7 @@ SystemClass::SystemClass()
 	m_Fps = 0;
 	m_Cpu = 0;
 	m_Timer = 0;
+	m_Sound = 0;
 	score = 0;
 }
 
@@ -40,7 +41,7 @@ bool SystemClass::Initialize()
 
 	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
-	if(!m_Input)
+	if (!m_Input)
 	{
 		return false;
 	}
@@ -55,17 +56,35 @@ bool SystemClass::Initialize()
 
 	// Create the graphics object.  This object will handle rendering all the graphics for this application.
 	m_Graphics = new GraphicsClass;
-	if(!m_Graphics)
+	if (!m_Graphics)
 	{
 		return false;
 	}
 
 	// Initialize the graphics object.
 	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
+
+	// Create the sound object.
+	m_Sound = new SoundClass;
+	if (!m_Sound) { return false; }
+	// Initialize the sound object.
+	result = m_Sound->Initialize(m_hwnd);
+	if (!result) {
+		MessageBox(m_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+		return false;
+	}
+	//m_Sound2 = new SoundClass;
+	//if (!m_Sound2) { return false; }
+	//// Initialize the sound object.
+	//result = m_Sound2->Initialize2(m_hwnd);
+	//if (!result) {
+	//	MessageBox(m_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+	//	return false;
+	//}
 
 	// Create the fps object.
 	m_Fps = new FpsClass;
@@ -76,8 +95,8 @@ bool SystemClass::Initialize()
 
 	// Initialize the fps object.
 	m_Fps->Initialize();
-		// Create the cpu object.
-		m_Cpu = new CpuClass;
+	// Create the cpu object.
+	m_Cpu = new CpuClass;
 	if (!m_Cpu)
 	{
 		return false;
@@ -85,8 +104,8 @@ bool SystemClass::Initialize()
 
 	// Initialize the cpu object.
 	m_Cpu->Initialize();
-		// Create the timer object.
-		m_Timer = new TimerClass;
+	// Create the timer object.
+	m_Timer = new TimerClass;
 	if (!m_Timer)
 	{
 		return false;
@@ -99,15 +118,23 @@ bool SystemClass::Initialize()
 		MessageBox(m_hwnd, L"Could not initialize the Timer object.", L"Error", MB_OK);
 		return false;
 	}
-	
+
 	return true;
 }
 
 
 void SystemClass::Shutdown()
 {
+	// Release the sound object.
+	if (m_Sound)
+	{
+		m_Sound->Shutdown();
+		delete m_Sound;
+		m_Sound = 0;
+	}
+
 	// Release the graphics object.
-	if(m_Graphics)
+	if (m_Graphics)
 	{
 		m_Graphics->Shutdown();
 		delete m_Graphics;
@@ -143,10 +170,10 @@ void SystemClass::Shutdown()
 		delete m_Fps;
 		m_Fps = 0;
 	}
-	
+
 	// Shutdown the window.
 	ShutdownWindows();
-	
+
 	return;
 }
 
@@ -159,20 +186,20 @@ void SystemClass::Run()
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
-	
+
 	// Loop until there is a quit message from the window or the user.
 	done = false;
-	while(!done)
+	while (!done)
 	{
 		// Handle the windows messages.
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
 		// If windows signals to end the application then exit out.
-		if(msg.message == WM_QUIT)
+		if (msg.message == WM_QUIT)
 		{
 			done = true;
 		}
@@ -180,7 +207,7 @@ void SystemClass::Run()
 		{
 			// Otherwise do the frame processing.
 			result = Frame();
-			if(!result)
+			if (!result)
 			{
 				MessageBox(m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
 				done = true;
@@ -203,13 +230,13 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
-//	int mouseX, mouseY;
+	//	int mouseX, mouseY;
 
-	// Update the system stats.
+		// Update the system stats.
 	m_Timer->Frame();
 	m_Fps->Frame();
 	m_Cpu->Frame();
-	
+
 	// Do the input frame processing.
 	result = m_Input->Frame();
 	if (!result)
@@ -238,22 +265,26 @@ bool SystemClass::Frame()
 		m_Graphics->m_SystemPlayerV.z += 5.0f;
 		m_Graphics->m_PlayerRotation.y = 0.0f * D3DX_PI / 180;
 		score++;
+		m_Sound->PlayJumpSound();
 	}
 	if (m_Input->IsDownPressed() && ((float)m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.1f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.z -= 5.0f;
 		m_Graphics->m_PlayerRotation.y = 180.0f * D3DX_PI / 180;
+		m_Sound->PlayJumpSound();
+		m_Sound->PlayGameOver();
 	}
 	if (m_Input->IsLeftPressed() && ((float)m_Graphics->m_PlayerV.x - m_Graphics->m_SystemPlayerV.x) <= 0.1f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.x -= 5.0f;
 		m_Graphics->m_PlayerRotation.y = 270.0f * D3DX_PI / 180;
-
+		m_Sound->PlayJumpSound();
 	}
 	if (m_Input->IsRightPressed() && ((float)m_Graphics->m_SystemPlayerV.x - m_Graphics->m_PlayerV.x) <= 0.1f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.x += 5.0f;
 		m_Graphics->m_PlayerRotation.y = 90.0f * D3DX_PI / 180;
+		m_Sound->PlayJumpSound();
 	}
 
 	// Get the location of the mouse from the input object,
@@ -281,7 +312,7 @@ bool SystemClass::Frame()
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
 
@@ -302,36 +333,36 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_applicationName = L"Engine";
 
 	// Setup the windows class with default settings.
-	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc   = WndProc;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = m_hinstance;
-	wc.hIcon		 = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm       = wc.hIcon;
-	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = m_hinstance;
+	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+	wc.hIconSm = wc.hIcon;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName  = NULL;
+	wc.lpszMenuName = NULL;
 	wc.lpszClassName = m_applicationName;
-	wc.cbSize        = sizeof(WNDCLASSEX);
-	
+	wc.cbSize = sizeof(WNDCLASSEX);
+
 	// Register the window class.
 	RegisterClassEx(&wc);
 
 	// Determine the resolution of the clients desktop screen.
-	screenWidth  = GetSystemMetrics(SM_CXSCREEN);
+	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if(FULL_SCREEN)
+	if (FULL_SCREEN)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize       = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth  = (unsigned long)screenWidth;
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
 		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		dmScreenSettings.dmBitsPerPel = 32;			
-		dmScreenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+		dmScreenSettings.dmBitsPerPel = 32;
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 		// Change the display settings to full screen.
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
@@ -342,18 +373,18 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	else
 	{
 		// If windowed then set it to 800x600 resolution.
-		screenWidth  = 800;
+		screenWidth = 800;
 		screenHeight = 600;
 
 		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
+		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
 
 	// Create the window with the screen settings and get the handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 
-						    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-						    posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(m_hwnd, SW_SHOW);
@@ -373,7 +404,7 @@ void SystemClass::ShutdownWindows()
 	ShowCursor(true);
 
 	// Fix the display settings if leaving full screen mode.
-	if(FULL_SCREEN)
+	if (FULL_SCREEN)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}
@@ -395,26 +426,26 @@ void SystemClass::ShutdownWindows()
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
-	switch(umessage)
+	switch (umessage)
 	{
 		// Check if the window is being destroyed.
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 
-		// Check if the window is being closed.
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);		
-			return 0;
-		}
+	// Check if the window is being closed.
+	case WM_CLOSE:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 
-		// All other messages pass to the message handler in the system class.
-		default:
-		{
-			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-		}
+	// All other messages pass to the message handler in the system class.
+	default:
+	{
+		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+	}
 	}
 }

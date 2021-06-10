@@ -468,7 +468,7 @@ bool TextClass::SetScore(int score, ID3D11DeviceContext* deviceContext)
 	}
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, fpsString, 375, 20, red, green, blue, deviceContext);
+	result = UpdateSentence(m_sentence1, fpsString, 375, 200, red, green, blue, deviceContext);
 	if (!result)
 	{
 		return false;

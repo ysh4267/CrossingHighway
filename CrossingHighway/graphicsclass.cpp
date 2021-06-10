@@ -105,7 +105,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the particle system object.
-	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/star.dds");
+	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"data/dust.png");
 	if (!result)
 	{
 		return false;
@@ -806,13 +806,14 @@ bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
-		particleMatrix, particleScaleMatrix, BitmapMatrix, offset;
+		particleMatrix,particleRotationMatrix,particleScaleMatrix, BitmapMatrix, offset;
 	bool result;
 
 	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1f);
 	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
 	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
 	D3DXMatrixTranslation(&particleMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	D3DXMatrixRotationYawPitchRoll(&particleRotationMatrix, 90.0f * 0.0174532925f,90.0f * 0.0174532925f,0.0f);
 	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
 	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z);
 	D3DXMatrixScaling(&particleScaleMatrix, 10.0f, 10.0f, 10.0f);
@@ -915,7 +916,7 @@ bool GraphicsClass::Render(float rotation)
 	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the texture shader.
-	result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), PlayerWorldMatrix, viewMatrix, projectionMatrix,
+	result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(),particleRotationMatrix* carObject[0].worldMatrix, viewMatrix, projectionMatrix,
 		m_ParticleSystem->GetTexture());
 	if (!result)
 	{
@@ -1041,9 +1042,9 @@ bool GraphicsClass::Render(float rotation)
 	if (gameover) {
 		static float y = 200;
 		if (y >= 50.0f) {
-
 			y -= 1.5f;
 		}
+		
 		result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 0, 0);
 		if (!result)
 		{

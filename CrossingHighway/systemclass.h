@@ -25,7 +25,7 @@
 #include "fpsclass.h"
 #include "cpuclass.h"
 #include "timerclass.h"
-
+#include "soundclass.h"
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +55,8 @@ private:
 	HWND m_hwnd;
 
 	InputClass* m_Input;
+	SoundClass* m_Sound;
+	SoundClass* m_Sound2;
 	GraphicsClass* m_Graphics;
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
