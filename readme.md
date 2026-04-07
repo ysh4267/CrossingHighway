@@ -10,6 +10,9 @@
 *   **참여 인원**: 프로그래밍 2명
 *   **역할**: 프로그래머
 
+### 플레이 영상
+[![CrossingHighway 플레이 영상](https://img.youtube.com/vi/JVxjvq_K-Mc/0.jpg)](https://youtu.be/JVxjvq_K-Mc)
+
 ## 기술 스택
 
 [![C++](https://img.shields.io/badge/C++-00599C?logo=cplusplus&logoColor=white)](https://isocpp.org/) [![DirectX 10](https://img.shields.io/badge/DirectX_10-006600?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-graphics) [![DirectX 11](https://img.shields.io/badge/DirectX_11-006600?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11) [![HLSL](https://img.shields.io/badge/HLSL-5C2D91?logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl)
@@ -245,6 +248,8 @@ bool TextureClass::Initialize(ID3D11Device* device, const WCHAR* filename)
 
 4종의 차량(Car, SUV, Truck, Bus)을 각각 24대씩, 총 96대의 차량 오브젝트를 관리합니다. 각 차량 종류는 3가지 색상 변형을 가지며, `CarModelInfo` 구조체로 3D 모델, 월드 위치, 변환 행렬, AABB 바운딩 박스 크기를 캡슐화합니다. 차량은 레인별로 다른 속도로 이동하며, 화면 밖으로 나가면 반대편에서 재등장합니다.
 
+> 초기에는 96대의 차량 월드 좌표를 개별 변수로 관리했으나, 차량 종류 판별이 어렵고 좌표 수가 과도하게 증가하여 유지보수에 한계가 있었습니다. 3D 모델, 월드 좌표, 변환 행렬, AABB 크기를 하나로 묶은 `CarModelInfo` 구조체를 설계하여 해결했습니다.
+
 <details>
 <summary>차량 오브젝트 구조체와 이동 로직</summary>
 
@@ -471,9 +476,11 @@ if (m_Graphics->m_score > 45 && isBgmPlayed3 == false) {
 
 `SoundClass`는 DirectSound를 사용하여 WAV 포맷의 오디오를 재생합니다. 6개의 세컨더리 버퍼를 관리하며 BGM 4트랙, 점프 효과음, 게임오버 효과음을 재생합니다. 난이도 전환 시 현재 BGM을 정지하고 다음 트랙으로 전환하는 `StopBgm()` → `PlayBgm()` 시퀀스로 BGM 체인지를 처리합니다.
 
+> WAV 파일 헤더에 메타데이터 청크가 포함된 경우 `SoundClass`의 파싱 로직이 데이터 청크만을 가정하고 있어 오프셋 계산이 틀어지는 문제가 발생했습니다. 바이너리 에디터로 WAV 파일의 메타데이터 청크를 직접 제거하여 해결했습니다.
+
 ### 4.3. HUD
 
-`TextClass`와 `FontClass`를 사용하여 DDS 비트맵 폰트 기반의 텍스트 HUD를 렌더링합니다. Z버퍼를 비활성화하고 알파 블렌딩을 활성화한 2D 모드에서 현재 점수, FPS, CPU 사용률, 폴리곤 수, 오브젝트 수를 표시합니다. 게임오버 시 게임오버 이미지가 화면 상단에서 하강하는 애니메이션을 표시합니다.
+`TextClass`와 `FontClass`를 사용하여 DDS 비트맵 폰트 기반의 텍스트 HUD를 렌더링합니다. Z버퍼를 비활성화하고 알파 블렌딩을 활성화한 2D 모드에서 현재 점수, FPS, CPU 사용률, 폴리곤 수, 오브젝트 수를 표시합니다. 난이도 구간 전환 시 스코어 텍스트의 색상을 변경하여 현재 난이도 단계를 시각적으로 구분합니다. 게임오버 시 게임오버 이미지가 화면 상단에서 하강하는 애니메이션과 함께 게임오버 전용 BGM을 재생합니다.
 
 
 ## 5. 빌드 마이그레이션
