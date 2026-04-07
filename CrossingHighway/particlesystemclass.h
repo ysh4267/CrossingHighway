@@ -9,7 +9,8 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <DirectXMath.h>
+using namespace DirectX;
 
 
 ///////////////////////
@@ -34,9 +35,9 @@ private:
 
 	struct VertexType
 	{
-		D3DXVECTOR3 position;
-		D3DXVECTOR2 texture;
-		D3DXVECTOR4 color;
+		XMFLOAT3 position;
+		XMFLOAT2 texture;
+		XMFLOAT4 color;
 	};
 
 public:
@@ -44,7 +45,7 @@ public:
 	ParticleSystemClass(const ParticleSystemClass&);
 	~ParticleSystemClass();
 
-	bool Initialize(ID3D11Device*, WCHAR*);
+	bool Initialize(ID3D11Device*, const WCHAR*);
 	void Shutdown();
 	bool Frame(float, ID3D11DeviceContext*);
 	void Render(ID3D11DeviceContext*);
@@ -53,7 +54,7 @@ public:
 	int GetIndexCount();
 
 private:
-	bool LoadTexture(ID3D11Device*, WCHAR*);
+	bool LoadTexture(ID3D11Device*, const WCHAR*);
 	void ReleaseTexture();
 
 	bool InitializeParticleSystem();

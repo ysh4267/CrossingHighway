@@ -9,7 +9,9 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <d3dx11tex.h>
+#include <string>
+#include "WICTextureLoader.h"
+#include "DDSTextureLoader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +24,7 @@ public:
 	TextureClass(const TextureClass&);
 	~TextureClass();
 
-	bool Initialize(ID3D11Device*, WCHAR*);
+	bool Initialize(ID3D11Device*, const WCHAR*);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();

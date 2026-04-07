@@ -261,26 +261,26 @@ bool SystemClass::Frame()
 	if (m_Input->IsUpPressed() && ((float)m_Graphics->m_SystemPlayerV.z - m_Graphics->m_PlayerV.z) <= 0.2f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.z += 5.0f;
-		m_Graphics->m_PlayerRotation.y = 0.0f * D3DX_PI / 180;
+		m_Graphics->m_PlayerRotation.y = 0.0f * XM_PI / 180;
 		score++;
 		m_Sound->PlayJumpSound();
 	}
 	if (m_Input->IsDownPressed() && ((float)m_Graphics->m_PlayerV.z - m_Graphics->m_SystemPlayerV.z) <= 0.2f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.z -= 5.0f;
-		m_Graphics->m_PlayerRotation.y = 180.0f * D3DX_PI / 180;
+		m_Graphics->m_PlayerRotation.y = 180.0f * XM_PI / 180;
 		m_Sound->PlayJumpSound();
 	}
 	if (m_Input->IsLeftPressed() && ((float)m_Graphics->m_PlayerV.x - m_Graphics->m_SystemPlayerV.x) <= 0.1f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.x -= 5.0f;
-		m_Graphics->m_PlayerRotation.y = 270.0f * D3DX_PI / 180;
+		m_Graphics->m_PlayerRotation.y = 270.0f * XM_PI / 180;
 		m_Sound->PlayJumpSound();
 	}
 	if (m_Input->IsRightPressed() && ((float)m_Graphics->m_SystemPlayerV.x - m_Graphics->m_PlayerV.x) <= 0.1f) {
 		m_Graphics->m_BackPlayerV = m_Graphics->m_SystemPlayerV;
 		m_Graphics->m_SystemPlayerV.x += 5.0f;
-		m_Graphics->m_PlayerRotation.y = 90.0f * D3DX_PI / 180;
+		m_Graphics->m_PlayerRotation.y = 90.0f * XM_PI / 180;
 		m_Sound->PlayJumpSound();
 	}
 

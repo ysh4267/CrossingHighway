@@ -26,8 +26,8 @@ private:
 
 	struct VertexType
 	{
-		D3DXVECTOR3 position;
-	    D3DXVECTOR2 texture;
+		XMFLOAT3 position;
+	    XMFLOAT2 texture;
 	};
 
 public:
@@ -35,9 +35,9 @@ public:
 	TextClass(const TextClass&);
 	~TextClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, D3DXMATRIX);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, XMMATRIX);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
+	bool Render(ID3D11DeviceContext*, XMMATRIX, XMMATRIX);
 	bool SetMousePosition(int, int, ID3D11DeviceContext*);
 	bool SetFps(int, ID3D11DeviceContext*);
 	bool SetCpu(int, ID3D11DeviceContext*);
@@ -47,15 +47,15 @@ public:
 	bool SetScreenSize(int, ID3D11DeviceContext*);
 private:
 	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
-	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float, ID3D11DeviceContext*);
+	bool UpdateSentence(SentenceType*, const char*, int, int, float, float, float, ID3D11DeviceContext*);
 	void ReleaseSentence(SentenceType**);
-	bool RenderSentence(ID3D11DeviceContext*, SentenceType*, D3DXMATRIX, D3DXMATRIX);
+	bool RenderSentence(ID3D11DeviceContext*, SentenceType*, XMMATRIX, XMMATRIX);
 
 private:
 	FontClass* m_Font;
 	FontShaderClass* m_FontShader;
 	int m_screenWidth, m_screenHeight;
-	D3DXMATRIX m_baseViewMatrix;
+	XMMATRIX m_baseViewMatrix;
 	SentenceType* m_sentence1;
 	SentenceType* m_sentence2;
 	SentenceType* m_sentence3;

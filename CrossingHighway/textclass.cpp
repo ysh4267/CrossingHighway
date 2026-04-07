@@ -28,8 +28,8 @@ TextClass::~TextClass()
 }
 
 
-bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight, 
-						   D3DXMATRIX baseViewMatrix)
+bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight,
+						   XMMATRIX baseViewMatrix)
 {
 	bool result;
 
@@ -196,7 +196,7 @@ void TextClass::Shutdown()
 }
 
 
-bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
+bool TextClass::Render(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX orthoMatrix)
 {
 	bool result;
 
@@ -348,7 +348,7 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 }
 
 
-bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX, int positionY, float red, float green, float blue,
+bool TextClass::UpdateSentence(SentenceType* sentence, const char* text, int positionX, int positionY, float red, float green, float blue,
 							   ID3D11DeviceContext* deviceContext)
 {
 	int numLetters;
@@ -441,11 +441,11 @@ void TextClass::ReleaseSentence(SentenceType** sentence)
 }
 
 
-bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sentence, D3DXMATRIX worldMatrix, 
-							   D3DXMATRIX orthoMatrix)
+bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sentence, XMMATRIX worldMatrix,
+							   XMMATRIX orthoMatrix)
 {
 	unsigned int stride, offset;
-	D3DXVECTOR4 pixelColor;
+	XMFLOAT4 pixelColor;
 	bool result;
 
 
@@ -463,7 +463,7 @@ bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType*
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Create a pixel color vector with the input sentence color.
-	pixelColor = D3DXVECTOR4(sentence->red, sentence->green, sentence->blue, 1.0f);
+	pixelColor = XMFLOAT4(sentence->red, sentence->green, sentence->blue, 1.0f);
 
 	// Render the text using the font shader.
 	result = m_FontShader->Render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture(), 

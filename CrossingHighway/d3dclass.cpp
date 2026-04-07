@@ -39,7 +39,8 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator, stringLength;
+	unsigned int numModes, i, numerator, denominator;
+	size_t stringLength;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
 	int error;
@@ -342,17 +343,17 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
     m_deviceContext->RSSetViewports(1, &viewport);
 
 	// Setup the projection matrix.
-	fieldOfView = (float)D3DX_PI / 4.0f;
+	fieldOfView = XM_PI / 4.0f;
 	screenAspect = (float)screenWidth / (float)screenHeight;
 
 	// Create the projection matrix for 3D rendering.
-	D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
 
     // Initialize the world matrix to the identity matrix.
-    D3DXMatrixIdentity(&m_worldMatrix);
+    m_worldMatrix = XMMatrixIdentity();
 
 	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&m_orthoMatrix, (float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 
 	// Clear the second depth stencil state before setting the parameters.
 	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
@@ -544,21 +545,21 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 }
 
 
-void D3DClass::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
+void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
 {
 	projectionMatrix = m_projectionMatrix;
 	return;
 }
 
 
-void D3DClass::GetWorldMatrix(D3DXMATRIX& worldMatrix)
+void D3DClass::GetWorldMatrix(XMMATRIX& worldMatrix)
 {
 	worldMatrix = m_worldMatrix;
 	return;
 }
 
 
-void D3DClass::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
+void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix)
 {
 	orthoMatrix = m_orthoMatrix;
 	return;

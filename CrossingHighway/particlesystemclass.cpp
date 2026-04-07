@@ -24,7 +24,7 @@ ParticleSystemClass::~ParticleSystemClass()
 }
 
 
-bool ParticleSystemClass::Initialize(ID3D11Device* device, WCHAR* textureFilename)
+bool ParticleSystemClass::Initialize(ID3D11Device* device, const WCHAR* textureFilename)
 {
 	bool result;
 
@@ -115,7 +115,7 @@ int ParticleSystemClass::GetIndexCount()
 }
 
 
-bool ParticleSystemClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
+bool ParticleSystemClass::LoadTexture(ID3D11Device* device, const WCHAR* filename)
 {
 	bool result;
 
@@ -469,39 +469,39 @@ bool ParticleSystemClass::UpdateBuffers(ID3D11DeviceContext* deviceContext)
 	for(i=0; i<m_currentParticleCount; i++)
 	{
 		// Bottom left.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX - m_particleSize, m_particleList[i].positionY - m_particleSize, m_particleList[i].positionZ);
-		m_vertices[index].texture = D3DXVECTOR2(0.0f, 1.0f);
-		m_vertices[index].color = D3DXVECTOR4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
+		m_vertices[index].position = XMFLOAT3(m_particleList[i].positionX - m_particleSize, m_particleList[i].positionY - m_particleSize, m_particleList[i].positionZ);
+		m_vertices[index].texture = XMFLOAT2(0.0f, 1.0f);
+		m_vertices[index].color = XMFLOAT4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
 		index++;
 
 		// Top left.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX - m_particleSize, m_particleList[i].positionY + m_particleSize, m_particleList[i].positionZ);
-		m_vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-		m_vertices[index].color = D3DXVECTOR4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
+		m_vertices[index].position = XMFLOAT3(m_particleList[i].positionX - m_particleSize, m_particleList[i].positionY + m_particleSize, m_particleList[i].positionZ);
+		m_vertices[index].texture = XMFLOAT2(0.0f, 0.0f);
+		m_vertices[index].color = XMFLOAT4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
 		index++;
 
 		// Bottom right.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX + m_particleSize, m_particleList[i].positionY - m_particleSize, m_particleList[i].positionZ);
-		m_vertices[index].texture = D3DXVECTOR2(1.0f, 1.0f);
-		m_vertices[index].color = D3DXVECTOR4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
+		m_vertices[index].position = XMFLOAT3(m_particleList[i].positionX + m_particleSize, m_particleList[i].positionY - m_particleSize, m_particleList[i].positionZ);
+		m_vertices[index].texture = XMFLOAT2(1.0f, 1.0f);
+		m_vertices[index].color = XMFLOAT4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
 		index++;
 
 		// Bottom right.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX + m_particleSize, m_particleList[i].positionY - m_particleSize, m_particleList[i].positionZ);
-		m_vertices[index].texture = D3DXVECTOR2(1.0f, 1.0f);
-		m_vertices[index].color = D3DXVECTOR4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
+		m_vertices[index].position = XMFLOAT3(m_particleList[i].positionX + m_particleSize, m_particleList[i].positionY - m_particleSize, m_particleList[i].positionZ);
+		m_vertices[index].texture = XMFLOAT2(1.0f, 1.0f);
+		m_vertices[index].color = XMFLOAT4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
 		index++;
 
 		// Top left.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX - m_particleSize, m_particleList[i].positionY + m_particleSize, m_particleList[i].positionZ);
-		m_vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-		m_vertices[index].color = D3DXVECTOR4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
+		m_vertices[index].position = XMFLOAT3(m_particleList[i].positionX - m_particleSize, m_particleList[i].positionY + m_particleSize, m_particleList[i].positionZ);
+		m_vertices[index].texture = XMFLOAT2(0.0f, 0.0f);
+		m_vertices[index].color = XMFLOAT4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
 		index++;
 
 		// Top right.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX + m_particleSize, m_particleList[i].positionY + m_particleSize, m_particleList[i].positionZ);
-		m_vertices[index].texture = D3DXVECTOR2(1.0f, 0.0f);
-		m_vertices[index].color = D3DXVECTOR4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
+		m_vertices[index].position = XMFLOAT3(m_particleList[i].positionX + m_particleSize, m_particleList[i].positionY + m_particleSize, m_particleList[i].positionZ);
+		m_vertices[index].texture = XMFLOAT2(1.0f, 0.0f);
+		m_vertices[index].color = XMFLOAT4(m_particleList[i].red, m_particleList[i].green, m_particleList[i].blue, 1.0f);
 		index++;
 	}
 	

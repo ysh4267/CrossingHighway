@@ -166,6 +166,8 @@
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="timerclass.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmapclass.h" />
@@ -188,6 +190,8 @@
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="timerclass.h" />
+    <ClInclude Include="WICTextureLoader.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="font.ps" />

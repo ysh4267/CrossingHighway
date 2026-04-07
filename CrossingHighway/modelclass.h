@@ -9,9 +9,10 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <DirectXMath.h>
 #include <fstream>
 using namespace std;
+using namespace DirectX;
 
 
 ///////////////////////
@@ -28,9 +29,9 @@ class ModelClass
 private:
 	struct VertexType
 	{
-		D3DXVECTOR3 position;
-	    D3DXVECTOR2 texture;
-		D3DXVECTOR3 normal;
+		XMFLOAT3 position;
+	    XMFLOAT2 texture;
+		XMFLOAT3 normal;
 	};
 
 	struct ModelType
@@ -52,7 +53,7 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, char*, WCHAR*);
+	bool Initialize(ID3D11Device*, const char*, const WCHAR*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -65,12 +66,12 @@ private:
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	bool LoadTexture(ID3D11Device*, WCHAR*);
+	bool LoadTexture(ID3D11Device*, const WCHAR*);
 	void ReleaseTexture();
 
-	bool LoadDataStructures(char*, int, int, int, int);
-	bool ReadFileCounts(char*, int&, int&, int&, int&);
-	bool LoadModel(char*);
+	bool LoadDataStructures(const char*, int, int, int, int);
+	bool ReadFileCounts(const char*, int&, int&, int&, int&);
+	bool LoadModel(const char*);
 	void ReleaseModel();
 
 private:

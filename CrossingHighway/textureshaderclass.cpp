@@ -49,8 +49,8 @@ void TextureShaderClass::Shutdown()
 }
 
 
-bool TextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-								D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
+bool TextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+								XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	bool result;
 
@@ -69,7 +69,7 @@ bool TextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCou
 }
 
 
-bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename, const WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -87,8 +87,8 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	pixelShaderBuffer = 0;
 
     // Compile the vertex shader code.
-	result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "TextureVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-								   &vertexShaderBuffer, &errorMessage, NULL);
+	result = D3DCompileFromFile(vsFilename, NULL, NULL, "TextureVertexShader", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS, 0,
+								   &vertexShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -106,8 +106,8 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	}
 
     // Compile the pixel shader code.
-	result = D3DX11CompileFromFile(psFilename, NULL, NULL, "TexturePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-								   &pixelShaderBuffer, &errorMessage, NULL);
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "TexturePixelShader", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS, 0,
+								   &pixelShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -256,7 +256,7 @@ void TextureShaderClass::ShutdownShader()
 }
 
 
-void TextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void TextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;
@@ -292,8 +292,8 @@ void TextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND
 }
 
 
-bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-											 D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
+bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+											 XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -302,9 +302,9 @@ bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 
 
 	// Transpose the matrices to prepare them for the shader.
-	D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
-	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+	worldMatrix = XMMatrixTranspose(worldMatrix);
+	viewMatrix = XMMatrixTranspose(viewMatrix);
+	projectionMatrix = XMMatrixTranspose(projectionMatrix);
 
 	// Lock the constant buffer so it can be written to.
 	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

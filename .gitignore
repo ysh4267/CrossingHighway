@@ -31,5 +31,7 @@
 *.app
 *.db
 **/Release/
+**/Debug/
 **/ipch/
-CrossingHighway/.vs/CrossingHighway/v16/.suo
+**/ignore/
+**/.vscode/

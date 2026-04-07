@@ -34,7 +34,7 @@ GraphicsClass::GraphicsClass()
 	m_ParticleSystem = 0;
 
 	m_score = 0;
-	
+
 	objNum = 0;
 	polyNum = 0;
 	accel = 0;
@@ -52,7 +52,7 @@ GraphicsClass::~GraphicsClass()
 {
 }
 
-bool GraphicsClass::CheckCubeIntersection(D3DXVECTOR2* vMin1, D3DXVECTOR2* vMax1, D3DXVECTOR2* vMin2, D3DXVECTOR2* vMax2)
+bool GraphicsClass::CheckCubeIntersection(XMFLOAT2* vMin1, XMFLOAT2* vMax1, XMFLOAT2* vMin2, XMFLOAT2* vMax2)
 {
 	if (vMin1->x <= vMax2->x && vMax1->x >= vMin2->x &&
 		vMin1->y <= vMax2->y && vMax1->y >= vMin2->y)
@@ -64,7 +64,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
 
-	D3DXMATRIX baseViewMatrix;
+	XMMATRIX baseViewMatrix;
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -193,8 +193,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 			return false;
 		}
-		carObject[i].maxSize = D3DXVECTOR2(3.0f, 2.0f);
-		carObject[i].minSize = D3DXVECTOR2(-3.0f, -2.0f);
+		carObject[i].maxSize = XMFLOAT2(3.0f, 2.0f);
+		carObject[i].minSize = XMFLOAT2(-3.0f, -2.0f);
 	}
 
 	//////////////////////////////////////////////////////////////////////////Suv
@@ -225,8 +225,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 			return false;
 		}
-		suvObject[i].maxSize = D3DXVECTOR2(3.0f, 2.0f);
-		suvObject[i].minSize = D3DXVECTOR2(-3.0f, -2.0f);
+		suvObject[i].maxSize = XMFLOAT2(3.0f, 2.0f);
+		suvObject[i].minSize = XMFLOAT2(-3.0f, -2.0f);
 	}
 
 	//////////////////////////////////////////////////////////////////Truck
@@ -257,8 +257,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 			return false;
 		}
-		truckObject[i].maxSize = D3DXVECTOR2(4.0f, 2.0f);
-		truckObject[i].minSize = D3DXVECTOR2(-4.0f, -2.0f);
+		truckObject[i].maxSize = XMFLOAT2(4.0f, 2.0f);
+		truckObject[i].minSize = XMFLOAT2(-4.0f, -2.0f);
 	}
 
 	///////////////////////////////////////////////////////////Bus
@@ -289,8 +289,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 			return false;
 		}
-		busObject[i].maxSize = D3DXVECTOR2(5.5f, 2.0f);
-		busObject[i].minSize = D3DXVECTOR2(-5.5f, -2.0f);
+		busObject[i].maxSize = XMFLOAT2(5.5f, 2.0f);
+		busObject[i].minSize = XMFLOAT2(-5.5f, -2.0f);
 	}
 
 #pragma endregion Model declaration
@@ -330,7 +330,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	
+
 	// Initialize the texture shader object.
 	result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
 	if (!result)
@@ -401,7 +401,7 @@ void GraphicsClass::Shutdown()
 		delete m_TextureShader;
 		m_TextureShader = 0;
 	}
-	
+
 	// Release the light object.
 	if(m_Light)
 	{
@@ -440,7 +440,7 @@ void GraphicsClass::Shutdown()
 		delete m_floor2Model;
 		m_floor2Model = 0;
 	}
-	
+
 	for (auto &object : carObject)
 	{
 		if (object.m_carModel)
@@ -529,12 +529,12 @@ bool GraphicsClass::Frame(int mouseX, int mouseY)
 
 
 	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.005f;
+	rotation += (float)XM_PI * 0.005f;
 	if(rotation > 360.0f)
 	{
 		rotation -= 360.0f;
 	}
-	
+
 	// Set the location of the mouse.
 	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
 	if (!result)
@@ -562,7 +562,7 @@ bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 	m_ParticleSystem->Frame(frameTime, m_D3D->GetDeviceContext());
 
 	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.005f;
+	rotation += (float)XM_PI * 0.005f;
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
@@ -611,48 +611,50 @@ bool GraphicsClass::Frame(int score,int fps, int cpu, float frameTime)
 	// Set the position of the camera.
 
 	m_Camera->SetPosition(m_PlayerV.x+5, m_PlayerV.y +30, m_PlayerV.z - 10);
-	if (m_score * 5 < m_SystemPlayerV.z) m_score = m_SystemPlayerV.z / 5.0f;
+	if (m_score * 5 < m_SystemPlayerV.z) m_score = (int)(m_SystemPlayerV.z / 5.0f);
 	return true;
 }
 
 #pragma region Model Position Initialize
 void GraphicsClass::WallPositionInitialize(WallModelInfo * wallObject) {
-	wallObject[0].maxPosSize = { -22.5, 100 };
-	wallObject[0].minPosSize = { -52.5, 0 };
-	wallObject[1].maxPosSize = { 52.5, 100 };
-	wallObject[1].minPosSize = { 32.5, 0 };
-	wallObject[2].maxPosSize = { 0, 20 };
-	wallObject[3].maxPosSize = { 15, 20 };
-	wallObject[4].maxPosSize = { 20, 20 };
-	wallObject[5].maxPosSize = { 25, 20 };
-	wallObject[6].maxPosSize = { 5, 25 };
-	wallObject[7].maxPosSize = { 15, 25 };
-	wallObject[8].maxPosSize = { 20, 25 };
-	wallObject[9].maxPosSize = { 10, 50 };
-	wallObject[10].maxPosSize = { 15, 50 };
-	wallObject[11].maxPosSize = { -15, 50 };
-	wallObject[12].maxPosSize = { -20, 50 };
-	wallObject[13].maxPosSize = { 0, 65 };
-	wallObject[14].maxPosSize = { 15, 65 };
-	wallObject[15].maxPosSize = { 20, 65 };
-	wallObject[16].maxPosSize = { 25, 65 };
-	wallObject[17].maxPosSize = { -15, 65 };
-	wallObject[18].maxPosSize = { 5, 70 };
-	wallObject[19].maxPosSize = { 15, 70 };
-	wallObject[20].maxPosSize = { 20, 70 };
-	wallObject[21].maxPosSize = { -15, 70 };
-	wallObject[22].maxPosSize = { -20, 70 };
-	wallObject[23].maxPosSize = { 15, 90 };
-	wallObject[24].maxPosSize = { 20, 90 };
-	wallObject[25].maxPosSize = { 30, 90 };
-	wallObject[26].maxPosSize = { 25, 95 };
-	wallObject[27].maxPosSize = { 30, 95 };
-	wallObject[28].maxPosSize = { 30, 0 };
+	wallObject[0].maxPosSize = { -22.5f, 100.0f };
+	wallObject[0].minPosSize = { -52.5f, 0.0f };
+	wallObject[1].maxPosSize = { 52.5f, 100.0f };
+	wallObject[1].minPosSize = { 32.5f, 0.0f };
+	wallObject[2].maxPosSize = { 0.0f, 20.0f };
+	wallObject[3].maxPosSize = { 15.0f, 20.0f };
+	wallObject[4].maxPosSize = { 20.0f, 20.0f };
+	wallObject[5].maxPosSize = { 25.0f, 20.0f };
+	wallObject[6].maxPosSize = { 5.0f, 25.0f };
+	wallObject[7].maxPosSize = { 15.0f, 25.0f };
+	wallObject[8].maxPosSize = { 20.0f, 25.0f };
+	wallObject[9].maxPosSize = { 10.0f, 50.0f };
+	wallObject[10].maxPosSize = { 15.0f, 50.0f };
+	wallObject[11].maxPosSize = { -15.0f, 50.0f };
+	wallObject[12].maxPosSize = { -20.0f, 50.0f };
+	wallObject[13].maxPosSize = { 0.0f, 65.0f };
+	wallObject[14].maxPosSize = { 15.0f, 65.0f };
+	wallObject[15].maxPosSize = { 20.0f, 65.0f };
+	wallObject[16].maxPosSize = { 25.0f, 65.0f };
+	wallObject[17].maxPosSize = { -15.0f, 65.0f };
+	wallObject[18].maxPosSize = { 5.0f, 70.0f };
+	wallObject[19].maxPosSize = { 15.0f, 70.0f };
+	wallObject[20].maxPosSize = { 20.0f, 70.0f };
+	wallObject[21].maxPosSize = { -15.0f, 70.0f };
+	wallObject[22].maxPosSize = { -20.0f, 70.0f };
+	wallObject[23].maxPosSize = { 15.0f, 90.0f };
+	wallObject[24].maxPosSize = { 20.0f, 90.0f };
+	wallObject[25].maxPosSize = { 30.0f, 90.0f };
+	wallObject[26].maxPosSize = { 25.0f, 95.0f };
+	wallObject[27].maxPosSize = { 30.0f, 95.0f };
+	wallObject[28].maxPosSize = { 30.0f, 0.0f };
 
 	for (int i = 2; i < 29; i++)
 	{
-		wallObject[i].minPosSize = { wallObject[i].maxPosSize.x - 2.5f, wallObject[i].maxPosSize.y - 2.5f };
-		wallObject[i].maxPosSize = { wallObject[i].maxPosSize.x + 2.5f, wallObject[i].maxPosSize.y + 2.5f };
+		float cx = wallObject[i].maxPosSize.x;
+		float cy = wallObject[i].maxPosSize.y;
+		wallObject[i].minPosSize = { cx - 2.5f, cy - 2.5f };
+		wallObject[i].maxPosSize = { cx + 2.5f, cy + 2.5f };
 	}
 }
 
@@ -784,49 +786,52 @@ void GraphicsClass::MoveCarForward(CarModelInfo &object) {
 		object.worldPosition.x += 0.05f + accel;
 	}
 
-	else 
+	else
 	{
 		object.worldPosition.x += 0.03f + accel;
 	}
 }
 
 bool GraphicsClass::IsCollision() {
+	XMFLOAT2 playerMin(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f);
+	XMFLOAT2 playerMax(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f);
+
 	for (auto object : carObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+		if (CheckCubeIntersection(&playerMin, &playerMax, &object.minPosSize, &object.maxPosSize)) {
 			gameover = true;
 			return true;
 		}
 	}
 	for (auto object : suvObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+		if (CheckCubeIntersection(&playerMin, &playerMax, &object.minPosSize, &object.maxPosSize)) {
 			gameover = true;
 			return true;
 		}
 	}
 	for (auto object : truckObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+		if (CheckCubeIntersection(&playerMin, &playerMax, &object.minPosSize, &object.maxPosSize)) {
 			gameover = true;
 			return true;
 		}
 	}
 	for (auto object : busObject) {
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &object.minPosSize, &object.maxPosSize)) {
+		if (CheckCubeIntersection(&playerMin, &playerMax, &object.minPosSize, &object.maxPosSize)) {
 			gameover = true;
 			return true;
 		}
 	}
 	for (auto object : wallObject1) {
-		D3DXVECTOR2 maxV = { object.maxPosSize.x, object.maxPosSize.y + infMap1Z };
-		D3DXVECTOR2 minV = { object.minPosSize.x, object.minPosSize.y + infMap1Z };
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &minV, &maxV))
+		XMFLOAT2 maxV = { object.maxPosSize.x, object.maxPosSize.y + infMap1Z };
+		XMFLOAT2 minV = { object.minPosSize.x, object.minPosSize.y + infMap1Z };
+		if (CheckCubeIntersection(&playerMin, &playerMax, &minV, &maxV))
 		{
 			return true;
 		}
 	}
 	for (auto object : wallObject2) {
-		D3DXVECTOR2 maxV = { object.maxPosSize.x, object.maxPosSize.y + infMap2Z };
-		D3DXVECTOR2 minV = { object.minPosSize.x, object.minPosSize.y + infMap2Z };
-		if (CheckCubeIntersection(new D3DXVECTOR2(m_PlayerV.x - 0.5f, m_PlayerV.z - 0.5f), new D3DXVECTOR2(m_PlayerV.x + 0.5f, m_PlayerV.z + 0.5f), &minV, &maxV))
+		XMFLOAT2 maxV = { object.maxPosSize.x, object.maxPosSize.y + infMap2Z };
+		XMFLOAT2 minV = { object.minPosSize.x, object.minPosSize.y + infMap2Z };
+		if (CheckCubeIntersection(&playerMin, &playerMax, &minV, &maxV))
 		{
 			return true;
 		}
@@ -837,22 +842,26 @@ bool GraphicsClass::IsCollision() {
 
 bool GraphicsClass::Render(float rotation)
 {
-	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	D3DXMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+	XMMATRIX PlayerWorldMatrix, PlayerRotationMatrix, floor1WorldMatrix, floor2WorldMatrix,
 		particleMatrix,particleRotationMatrix,particleScaleMatrix, BitmapMatrix, offset;
 	bool result;
 	int tempObjNum = 0;
 	int tempPolyNum = 0;
 
-	D3DXVec3Lerp(&m_PlayerV, new D3DXVECTOR3(m_PlayerV), new D3DXVECTOR3(m_SystemPlayerV), 0.1f);
-	D3DXMatrixRotationY(&PlayerRotationMatrix, m_PlayerRotation.y);
-	D3DXMatrixTranslation(&PlayerWorldMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
-	D3DXMatrixTranslation(&particleMatrix, m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
-	D3DXMatrixRotationYawPitchRoll(&particleRotationMatrix, 90.0f * 0.0174532925f,90.0f * 0.0174532925f,0.0f);
-	D3DXMatrixTranslation(&floor1WorldMatrix, 0, 0, infMap1Z);
-	D3DXMatrixTranslation(&floor2WorldMatrix, 0, 0, infMap2Z);
-	D3DXMatrixScaling(&particleScaleMatrix, 10.0f, 10.0f, 10.0f);
-	
+	// Lerp player position
+	XMVECTOR vPlayer = XMLoadFloat3(&m_PlayerV);
+	XMVECTOR vSystem = XMLoadFloat3(&m_SystemPlayerV);
+	XMStoreFloat3(&m_PlayerV, XMVectorLerp(vPlayer, vSystem, 0.1f));
+
+	PlayerRotationMatrix = XMMatrixRotationY(m_PlayerRotation.y);
+	PlayerWorldMatrix = XMMatrixTranslation(m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	particleMatrix = XMMatrixTranslation(m_PlayerV.x, m_PlayerV.y, m_PlayerV.z);
+	particleRotationMatrix = XMMatrixRotationRollPitchYaw(90.0f * 0.0174532925f, 90.0f * 0.0174532925f, 0.0f);
+	floor1WorldMatrix = XMMatrixTranslation(0, 0, infMap1Z);
+	floor2WorldMatrix = XMMatrixTranslation(0, 0, infMap2Z);
+	particleScaleMatrix = XMMatrixScaling(10.0f, 10.0f, 10.0f);
+
 	for (auto &object : carObject) {
 		MoveCarForward(object);
 	}
@@ -868,47 +877,47 @@ bool GraphicsClass::Render(float rotation)
 
 	for (int i = 0; i < maxCarNum / 2; i++)
 	{
-		D3DXMatrixTranslation(&carObject[i].worldMatrix, carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y + infMap1Z);
-		D3DXMatrixTranslation(&suvObject[i].worldMatrix, suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y + infMap1Z);
-		D3DXMatrixTranslation(&truckObject[i].worldMatrix, truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y + infMap1Z);
-		D3DXMatrixTranslation(&busObject[i].worldMatrix, busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y + infMap1Z);
-		D3DXVec2Add(&carObject[i].maxPosSize, new D3DXVECTOR2(carObject[i].maxSize), new D3DXVECTOR2(carObject[i].worldPosition.x, carObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&carObject[i].minPosSize, new D3DXVECTOR2(carObject[i].minSize), new D3DXVECTOR2(carObject[i].worldPosition.x, carObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&suvObject[i].maxPosSize, new D3DXVECTOR2(suvObject[i].maxSize), new D3DXVECTOR2(suvObject[i].worldPosition.x, suvObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&suvObject[i].minPosSize, new D3DXVECTOR2(suvObject[i].minSize), new D3DXVECTOR2(suvObject[i].worldPosition.x, suvObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&truckObject[i].maxPosSize, new D3DXVECTOR2(truckObject[i].maxSize), new D3DXVECTOR2(truckObject[i].worldPosition.x, truckObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&truckObject[i].minPosSize, new D3DXVECTOR2(truckObject[i].minSize), new D3DXVECTOR2(truckObject[i].worldPosition.x, truckObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&busObject[i].maxPosSize, new D3DXVECTOR2(busObject[i].maxSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap1Z));
-		D3DXVec2Add(&busObject[i].minPosSize, new D3DXVECTOR2(busObject[i].minSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap1Z)); 
+		carObject[i].worldMatrix = XMMatrixTranslation(carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y + infMap1Z);
+		suvObject[i].worldMatrix = XMMatrixTranslation(suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y + infMap1Z);
+		truckObject[i].worldMatrix = XMMatrixTranslation(truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y + infMap1Z);
+		busObject[i].worldMatrix = XMMatrixTranslation(busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y + infMap1Z);
+		carObject[i].maxPosSize = XMFLOAT2(carObject[i].maxSize.x + carObject[i].worldPosition.x, carObject[i].maxSize.y + carObject[i].worldPosition.y + infMap1Z);
+		carObject[i].minPosSize = XMFLOAT2(carObject[i].minSize.x + carObject[i].worldPosition.x, carObject[i].minSize.y + carObject[i].worldPosition.y + infMap1Z);
+		suvObject[i].maxPosSize = XMFLOAT2(suvObject[i].maxSize.x + suvObject[i].worldPosition.x, suvObject[i].maxSize.y + suvObject[i].worldPosition.y + infMap1Z);
+		suvObject[i].minPosSize = XMFLOAT2(suvObject[i].minSize.x + suvObject[i].worldPosition.x, suvObject[i].minSize.y + suvObject[i].worldPosition.y + infMap1Z);
+		truckObject[i].maxPosSize = XMFLOAT2(truckObject[i].maxSize.x + truckObject[i].worldPosition.x, truckObject[i].maxSize.y + truckObject[i].worldPosition.y + infMap1Z);
+		truckObject[i].minPosSize = XMFLOAT2(truckObject[i].minSize.x + truckObject[i].worldPosition.x, truckObject[i].minSize.y + truckObject[i].worldPosition.y + infMap1Z);
+		busObject[i].maxPosSize = XMFLOAT2(busObject[i].maxSize.x + busObject[i].worldPosition.x, busObject[i].maxSize.y + busObject[i].worldPosition.y + infMap1Z);
+		busObject[i].minPosSize = XMFLOAT2(busObject[i].minSize.x + busObject[i].worldPosition.x, busObject[i].minSize.y + busObject[i].worldPosition.y + infMap1Z);
 	}
 
 	for (int i = maxCarNum / 2; i < maxCarNum; i++)
 	{
-		D3DXMatrixTranslation(&carObject[i].worldMatrix, carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y + infMap2Z);
-		D3DXMatrixTranslation(&suvObject[i].worldMatrix, suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y + infMap2Z);
-		D3DXMatrixTranslation(&truckObject[i].worldMatrix, truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y + infMap2Z);
-		D3DXMatrixTranslation(&busObject[i].worldMatrix, busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y + infMap2Z);
-		D3DXVec2Add(&carObject[i].maxPosSize, new D3DXVECTOR2(carObject[i].maxSize), new D3DXVECTOR2(carObject[i].worldPosition.x, carObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&carObject[i].minPosSize, new D3DXVECTOR2(carObject[i].minSize), new D3DXVECTOR2(carObject[i].worldPosition.x, carObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&suvObject[i].maxPosSize, new D3DXVECTOR2(suvObject[i].maxSize), new D3DXVECTOR2(suvObject[i].worldPosition.x, suvObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&suvObject[i].minPosSize, new D3DXVECTOR2(suvObject[i].minSize), new D3DXVECTOR2(suvObject[i].worldPosition.x, suvObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&truckObject[i].maxPosSize, new D3DXVECTOR2(truckObject[i].maxSize), new D3DXVECTOR2(truckObject[i].worldPosition.x, truckObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&truckObject[i].minPosSize, new D3DXVECTOR2(truckObject[i].minSize), new D3DXVECTOR2(truckObject[i].worldPosition.x, truckObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&busObject[i].maxPosSize, new D3DXVECTOR2(busObject[i].maxSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap2Z));
-		D3DXVec2Add(&busObject[i].minPosSize, new D3DXVECTOR2(busObject[i].minSize), new D3DXVECTOR2(busObject[i].worldPosition.x, busObject[i].worldPosition.y + infMap2Z));
+		carObject[i].worldMatrix = XMMatrixTranslation(carObject[i].worldPosition.x, 0.0f, carObject[i].worldPosition.y + infMap2Z);
+		suvObject[i].worldMatrix = XMMatrixTranslation(suvObject[i].worldPosition.x, 0.0f, suvObject[i].worldPosition.y + infMap2Z);
+		truckObject[i].worldMatrix = XMMatrixTranslation(truckObject[i].worldPosition.x, 0.0f, truckObject[i].worldPosition.y + infMap2Z);
+		busObject[i].worldMatrix = XMMatrixTranslation(busObject[i].worldPosition.x, 0.0f, busObject[i].worldPosition.y + infMap2Z);
+		carObject[i].maxPosSize = XMFLOAT2(carObject[i].maxSize.x + carObject[i].worldPosition.x, carObject[i].maxSize.y + carObject[i].worldPosition.y + infMap2Z);
+		carObject[i].minPosSize = XMFLOAT2(carObject[i].minSize.x + carObject[i].worldPosition.x, carObject[i].minSize.y + carObject[i].worldPosition.y + infMap2Z);
+		suvObject[i].maxPosSize = XMFLOAT2(suvObject[i].maxSize.x + suvObject[i].worldPosition.x, suvObject[i].maxSize.y + suvObject[i].worldPosition.y + infMap2Z);
+		suvObject[i].minPosSize = XMFLOAT2(suvObject[i].minSize.x + suvObject[i].worldPosition.x, suvObject[i].minSize.y + suvObject[i].worldPosition.y + infMap2Z);
+		truckObject[i].maxPosSize = XMFLOAT2(truckObject[i].maxSize.x + truckObject[i].worldPosition.x, truckObject[i].maxSize.y + truckObject[i].worldPosition.y + infMap2Z);
+		truckObject[i].minPosSize = XMFLOAT2(truckObject[i].minSize.x + truckObject[i].worldPosition.x, truckObject[i].minSize.y + truckObject[i].worldPosition.y + infMap2Z);
+		busObject[i].maxPosSize = XMFLOAT2(busObject[i].maxSize.x + busObject[i].worldPosition.x, busObject[i].maxSize.y + busObject[i].worldPosition.y + infMap2Z);
+		busObject[i].minPosSize = XMFLOAT2(busObject[i].minSize.x + busObject[i].worldPosition.x, busObject[i].minSize.y + busObject[i].worldPosition.y + infMap2Z);
 	}
 
 	if (m_SystemPlayerV.z - 150 > infMap1Z) {
 		infMap1Z += 200;
 	}
-	if (m_SystemPlayerV.z - 150 > infMap2Z) { 
-		infMap2Z += 200; 
+	if (m_SystemPlayerV.z - 150 > infMap2Z) {
+		infMap2Z += 200;
 	}
-	if (m_SystemPlayerV.z + 80 < infMap1Z) { 
-		infMap1Z -= 200; 
+	if (m_SystemPlayerV.z + 80 < infMap1Z) {
+		infMap1Z -= 200;
 	}
-	if (m_SystemPlayerV.z + 80 < infMap2Z) { 
-		infMap2Z -= 200; 
+	if (m_SystemPlayerV.z + 80 < infMap2Z) {
+		infMap2Z -= 200;
 	}
 
 	if (IsCollision())
@@ -950,9 +959,9 @@ bool GraphicsClass::Render(float rotation)
 #pragma region Particle Position
 	for (int i = 1; i < 12; i++)
 	{
-		D3DXMATRIX TempM;
+		XMMATRIX TempM;
 
-		D3DXMatrixTranslation(&TempM, carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap1Z);
+		TempM = XMMatrixTranslation(carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap1Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -964,9 +973,9 @@ bool GraphicsClass::Render(float rotation)
 
 	for (int i = 0; i < 12; i++)
 	{
-		D3DXMATRIX TempM;
+		XMMATRIX TempM;
 
-		D3DXMatrixTranslation(&TempM, suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap1Z);
+		TempM = XMMatrixTranslation(suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap1Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -975,7 +984,7 @@ bool GraphicsClass::Render(float rotation)
 			return false;
 		}
 
-		D3DXMatrixTranslation(&TempM, truckObject[i].worldPosition.x - 2.7f, 0.0f, truckObject[i].worldPosition.y + 0.5f + infMap1Z);
+		TempM = XMMatrixTranslation(truckObject[i].worldPosition.x - 2.7f, 0.0f, truckObject[i].worldPosition.y + 0.5f + infMap1Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -984,7 +993,7 @@ bool GraphicsClass::Render(float rotation)
 			return false;
 		}
 
-		D3DXMatrixTranslation(&TempM, busObject[i].worldPosition.x - 4.5f, 0.0f, busObject[i].worldPosition.y + 0.5f + infMap1Z);
+		TempM = XMMatrixTranslation(busObject[i].worldPosition.x - 4.5f, 0.0f, busObject[i].worldPosition.y + 0.5f + infMap1Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -996,8 +1005,8 @@ bool GraphicsClass::Render(float rotation)
 
 	for (int i = 12; i < 24; i++)
 	{
-		D3DXMATRIX TempM;
-		D3DXMatrixTranslation(&TempM, carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap2Z);
+		XMMATRIX TempM;
+		TempM = XMMatrixTranslation(carObject[i].worldPosition.x - 0.5f, 0.0f, carObject[i].worldPosition.y + 0.5f + infMap2Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -1006,7 +1015,7 @@ bool GraphicsClass::Render(float rotation)
 			return false;
 		}
 
-		D3DXMatrixTranslation(&TempM, suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap2Z);
+		TempM = XMMatrixTranslation(suvObject[i].worldPosition.x - 0.5f, 0.0f, suvObject[i].worldPosition.y + 0.5f + infMap2Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -1015,7 +1024,7 @@ bool GraphicsClass::Render(float rotation)
 			return false;
 		}
 
-		D3DXMatrixTranslation(&TempM, truckObject[i].worldPosition.x - 3.0f, 0.0f, truckObject[i].worldPosition.y + 0.5f + infMap2Z);
+		TempM = XMMatrixTranslation(truckObject[i].worldPosition.x - 3.0f, 0.0f, truckObject[i].worldPosition.y + 0.5f + infMap2Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -1024,7 +1033,7 @@ bool GraphicsClass::Render(float rotation)
 			return false;
 		}
 
-		D3DXMatrixTranslation(&TempM, busObject[i].worldPosition.x - 4.5f, 0.0f, busObject[i].worldPosition.y + 0.5f + infMap2Z);
+		TempM = XMMatrixTranslation(busObject[i].worldPosition.x - 4.5f, 0.0f, busObject[i].worldPosition.y + 0.5f + infMap2Z);
 		// Render the model using the texture shader.
 		result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), particleRotationMatrix * TempM, viewMatrix, projectionMatrix,
 			m_ParticleSystem->GetTexture());
@@ -1080,8 +1089,8 @@ bool GraphicsClass::Render(float rotation)
 	tempPolyNum += m_floor2Model->GetIndexCount();
 
 	////////////////////////Car
-	D3DXMATRIX TM;
-	D3DXMatrixRotationY(&TM, rotation);
+	XMMATRIX TM;
+	TM = XMMatrixRotationY(rotation);
 	carObject[0].m_carModel->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
@@ -1169,15 +1178,15 @@ bool GraphicsClass::Render(float rotation)
 
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
-	D3DXVECTOR3 cameraPosition = m_Camera->GetPosition();
-	D3DXVECTOR3 cameraRotation = m_Camera->GetRotation();
+	XMFLOAT3 cameraPosition = m_Camera->GetPosition();
+	XMFLOAT3 cameraRotation = m_Camera->GetRotation();
 
-	D3DXMatrixTranslation(&viewMatrix,0,0,cameraPosition.z+30);
+	viewMatrix = XMMatrixTranslation(0, 0, cameraPosition.z + 30);
 
-	D3DXMatrixRotationYawPitchRoll(&BitmapMatrix, cameraRotation.y * 0.0174532925f, cameraRotation.x * 0.0174532925f, cameraRotation.z );
+	BitmapMatrix = XMMatrixRotationRollPitchYaw(cameraRotation.x * 0.0174532925f, cameraRotation.y * 0.0174532925f, cameraRotation.z);
 
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	
+
 	// Turn on the alpha blending before rendering the text.
 	m_D3D->TurnOnAlphaBlending();
 
@@ -1186,13 +1195,13 @@ bool GraphicsClass::Render(float rotation)
 		if (y >= 50.0f) {
 			y -= 1.5f;
 		}
-		
+
 		result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 0, 0);
 		if (!result)
 		{
 			return false;
 		}
-		D3DXMatrixTranslation(&offset, 100, y, 0);
+		offset = XMMatrixTranslation(100, y, 0);
 		// Render the bitmap with the texture shader.
 		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix * offset, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
 		if (!result)

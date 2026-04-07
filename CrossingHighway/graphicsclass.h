@@ -40,18 +40,18 @@ private:
 	struct CarModelInfo
 	{
 		ModelClass* m_carModel;
-		D3DXVECTOR2 worldPosition;
-		D3DXMATRIX worldMatrix;
-		D3DXVECTOR2 maxSize;
-		D3DXVECTOR2 minSize;
-		D3DXVECTOR2 maxPosSize;
-		D3DXVECTOR2 minPosSize;
+		XMFLOAT2 worldPosition;
+		XMMATRIX worldMatrix;
+		XMFLOAT2 maxSize;
+		XMFLOAT2 minSize;
+		XMFLOAT2 maxPosSize;
+		XMFLOAT2 minPosSize;
 	};
 
 	struct WallModelInfo
 	{
-		D3DXVECTOR2 maxPosSize;
-		D3DXVECTOR2 minPosSize;
+		XMFLOAT2 maxPosSize;
+		XMFLOAT2 minPosSize;
 	};
 
 public:
@@ -63,11 +63,11 @@ public:
 	float camera_Y;
 	float camera_Z;
 
-	D3DXVECTOR3 m_PlayerV;
-	D3DXVECTOR3 m_SystemPlayerV;
-	D3DXVECTOR3 m_BackPlayerV;
-	D3DXVECTOR3 m_PlayerRotation;
-	D3DXMATRIX UIViewMatrix;
+	XMFLOAT3 m_PlayerV;
+	XMFLOAT3 m_SystemPlayerV;
+	XMFLOAT3 m_BackPlayerV;
+	XMFLOAT3 m_PlayerRotation;
+	XMMATRIX UIViewMatrix;
 
 	float infMap1Z;
 	float infMap2Z;
@@ -85,7 +85,7 @@ public:
 	bool Frame(int,int, int, float);
 	bool Render();
 	bool Render(float);
-	bool CheckCubeIntersection(D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*, D3DXVECTOR2*);
+	bool CheckCubeIntersection(XMFLOAT2*, XMFLOAT2*, XMFLOAT2*, XMFLOAT2*);
 	void CarPositionInitialize(int);
 	void WallPositionInitialize(WallModelInfo* wallObject);
 	void MoveCarForward(CarModelInfo&);
@@ -107,7 +107,7 @@ private:
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
-	ParticleShaderClass* m_ParticleShader; 
+	ParticleShaderClass* m_ParticleShader;
 	ParticleSystemClass* m_ParticleSystem;
 
 	TextClass* m_Text;

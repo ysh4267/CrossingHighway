@@ -50,8 +50,8 @@ void FontShaderClass::Shutdown()
 }
 
 
-bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-							 D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
+bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+							 XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor)
 {
 	bool result;
 
@@ -70,7 +70,7 @@ bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount,
 }
 
 
-bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename, const WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -89,8 +89,8 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 	pixelShaderBuffer = 0;
 
     // Compile the vertex shader code.
-	result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "FontVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-								   &vertexShaderBuffer, &errorMessage, NULL);
+	result = D3DCompileFromFile(vsFilename, NULL, NULL, "FontVertexShader", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS, 0,
+								   &vertexShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -108,8 +108,8 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 	}
 
     // Compile the pixel shader code.
-	result = D3DX11CompileFromFile(psFilename, NULL, NULL, "FontPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-								   &pixelShaderBuffer, &errorMessage, NULL);
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "FontPixelShader", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS, 0,
+								   &pixelShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -282,7 +282,7 @@ void FontShaderClass::ShutdownShader()
 }
 
 
-void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;
@@ -318,8 +318,8 @@ void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 }
 
 
-bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-										  D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
+bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+										  XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor)
 {
 	HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -339,9 +339,9 @@ bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3
 	dataPtr = (ConstantBufferType*)mappedResource.pData;
 
 	// Transpose the matrices to prepare them for the shader.
-	D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
-	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+	worldMatrix = XMMatrixTranspose(worldMatrix);
+	viewMatrix = XMMatrixTranspose(viewMatrix);
+	projectionMatrix = XMMatrixTranspose(projectionMatrix);
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = worldMatrix;

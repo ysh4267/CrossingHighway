@@ -23,7 +23,7 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device, char* modelFilename, WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, const char* modelFilename, const WCHAR* textureFilename)
 {
 	bool result;
 
@@ -127,9 +127,9 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	// Load the vertex array and index array with data.
 	for(i=0; i<m_vertexCount; i++)
 	{
-		vertices[i].position = D3DXVECTOR3(m_model[i].x, m_model[i].y, m_model[i].z);
-		vertices[i].texture = D3DXVECTOR2(m_model[i].tu, m_model[i].tv);
-		vertices[i].normal = D3DXVECTOR3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
+		vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
+		vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
+		vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 
 		indices[i] = i;
 	}
@@ -228,7 +228,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 }
 
 
-bool ModelClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
+bool ModelClass::LoadTexture(ID3D11Device* device, const WCHAR* filename)
 {
 	bool result;
 
@@ -265,7 +265,7 @@ void ModelClass::ReleaseTexture()
 }
 
 
-bool ModelClass::ReadFileCounts(char* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount)
+bool ModelClass::ReadFileCounts(const char* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount)
 {
 	ifstream fin;
 	char input;
@@ -323,9 +323,9 @@ bool ModelClass::ReadFileCounts(char* filename, int& vertexCount, int& textureCo
 }
 
 
-bool ModelClass::LoadDataStructures(char* filename, int vertexCount, int textureCount, int normalCount, int faceCount)
+bool ModelClass::LoadDataStructures(const char* filename, int vertexCount, int textureCount, int normalCount, int faceCount)
 {
-	D3DXVECTOR3* vertices, * texcoords, * normals;
+	XMFLOAT3* vertices, * texcoords, * normals;
 	FaceType* faces;
 	ifstream fin;
 	int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
@@ -334,19 +334,19 @@ bool ModelClass::LoadDataStructures(char* filename, int vertexCount, int texture
 
 
 	// Initialize the four data structures.
-	vertices = new D3DXVECTOR3[vertexCount];
+	vertices = new XMFLOAT3[vertexCount];
 	if (!vertices)
 	{
 		return false;
 	}
 
-	texcoords = new D3DXVECTOR3[textureCount];
+	texcoords = new XMFLOAT3[textureCount];
 	if (!texcoords)
 	{
 		return false;
 	}
 
-	normals = new D3DXVECTOR3[normalCount];
+	normals = new XMFLOAT3[normalCount];
 	if (!normals)
 	{
 		return false;
@@ -530,7 +530,7 @@ bool ModelClass::LoadDataStructures(char* filename, int vertexCount, int texture
 }
 
 
-bool ModelClass::LoadModel(char* filename)
+bool ModelClass::LoadModel(const char* filename)
 {
 	ifstream fin;
 	char input;
