@@ -12,7 +12,7 @@
 
 ## 기술 스택
 
-[![C++](https://img.shields.io/badge/C++-00599C?logo=cplusplus&logoColor=white)](https://isocpp.org/) [![DirectX 11](https://img.shields.io/badge/DirectX_11-006600?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11) [![HLSL](https://img.shields.io/badge/HLSL-5C2D91?logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl)
+[![C++](https://img.shields.io/badge/C++-00599C?logo=cplusplus&logoColor=white)](https://isocpp.org/) [![DirectX 10](https://img.shields.io/badge/DirectX_10-006600?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-graphics) [![DirectX 11](https://img.shields.io/badge/DirectX_11-006600?logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11) [![HLSL](https://img.shields.io/badge/HLSL-5C2D91?logoColor=white)](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl)
 
 [![Visual Studio](https://img.shields.io/badge/Visual_Studio_2022-5C2D91?logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/) [![Windows SDK](https://img.shields.io/badge/Windows_10_SDK-0078D6?logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
 
